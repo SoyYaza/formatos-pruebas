@@ -144,7 +144,7 @@ input[type=range] { flex: 1; accent-color: var(--primary); }
 
 /* === MODO IMPRESIÓN / PDF (TAMAÑO CARTA - 1 SOLA HOJA) === */
 @media print {
-    @page { size: letter; margin: 10mm; margin-top: 0; margin-bottom: 0; } /* Márgenes reducidos para ganar espacio */
+    @page { size: letter; margin: 0 } /* Márgenes reducidos para ganar espacio */
     body { background-color: white; padding: 0; margin: 0; height: 100%; }
     .top-bar, .bottom-bar { display: none !important; }
     .app-container { max-width: 100%; margin: 0; }
