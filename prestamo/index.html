@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Préstamos Sindicales SUTCBEBCS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-container">
+    <div class="top-bar">
+        <button id="btn-print-blank" type="button" class="btn btn-secondary">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"></path></svg>
+            Descargar formato en blanco
+        </button>
+    </div>
+
+    <div class="sheet">
+        <div class="header">
+            <img src="logo.svg" class="logo-institucional" alt="Logo SUTCBEBCS">
+            <h1>Sindicato Único de Trabajadores del Colegio de Bachilleres <br> del Estado de Baja California Sur</h1>
+            <h2>X COMITÉ EJECUTIVO ESTATAL</h2>
+        </div>
+        <div style="text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--primary);">PRÉSTAMOS SINDICALES</div>
+
+        <div class="section">
+            <div class="section-title">1. DATOS DEL TRABAJADOR</div>
+            <div class="section-body grid">
+                <div class="field col-span-4"><label>APELLIDO PATERNO</label><input type="text" id="ap_paterno"></div>
+                <div class="field col-span-4"><label>APELLIDO MATERNO</label><input type="text" id="ap_materno"></div>
+                <div class="field col-span-4"><label>NOMBRE (S)</label><input type="text" id="nombres"></div>
+
+                <div class="field col-span-6"><label>DOMICILIO (CALLE, COLONIA Y C.P.)</label><input type="text" id="domicilio"></div>
+                <div class="field col-span-3"><label>CIUDAD</label>
+                    <select id="ciudad">
+                        <option value=""></option>
+                        <option value="LAPAZ">LA PAZ</option>
+                        <option value="LOSCABOS1">CABO SAN LUCAS</option>
+                        <option value="LOSCABOS2">SAN JOSÉ DEL CABO</option>
+                        <option value="CDCONST">CIUDAD CONSTITUCIÓN</option>
+                        <option value="LORETO">LORETO</option>
+                        <option value="ROSALIA">SANTA ROSALIA</option>
+                        <option value="GUERRERO">GUERRERO NEGRO</option>
+                    </select>
+                </div>
+                <div class="field col-span-3"><label>TELÉFONO</label><input type="text" id="telefono" placeholder="10 dígitos"></div>
+
+                <div class="field col-span-4"><label>CORREO ELECTRÓNICO</label><input type="email" id="email"></div>
+                <div class="field col-span-4"><label>CUENTA CLABE* (18 DÍGITOS)</label><input type="text" id="clabe" placeholder="18 dígitos"></div>
+                <div class="field col-span-4"><label>BANCO</label><input type="text" id="banco"></div>
+
+                <div class="field col-span-4"><label>CENTRO DE TRABAJO</label>
+                    <select id="centro">
+                    <option value=""></option>
+                        <option value="DG">DIRECCIÓN GENERAL</option>
+                        <option value="SEA">S.E.A. 01</option>
+                        <option value="ALMACEN">ALMACÉN</option>
+                        <option value="PLANTEL01">PLANTEL 01</option>
+                        <option value="PLANTEL02">PLANTEL 02</option>
+                        <option value="PLANTEL03">PLANTEL 03</option>
+                        <option value="PLANTEL04">PLANTEL 04</option>
+                        <option value="PLANTEL05">PLANTEL 05</option>
+                        <option value="PLANTEL06">PLANTEL 06</option>
+                        <option value="PLANTEL07">PLANTEL 07</option>
+                        <option value="PLANTEL08">PLANTEL 08</option>
+                        <option value="PLANTEL09">PLANTEL 09</option>
+                        <option value="PLANTEL10">PLANTEL 10</option>
+                        <option value="PLANTEL11">PLANTEL 11</option>
+                    </select>
+                </div>
+                <div class="field col-span-4"><label>PUESTO</label><input type="text" id="puesto"></div>
+                <div class="field col-span-4"><label>TURNO</label>
+                    <select id="turno">
+                        <option value=""></option>
+                        <option value="MATUTINO">MATUTINO</option>
+                        <option value="VESPERTINO">VESPERTINO</option>
+                        <option value="MIXTO">MIXTO</option>
+                    </select>
+                </div>
+
+                <div class="field col-span-6"><label>SUELDO NETO QUINCENAL</label><input type="number" id="sueldo" step="0.01" min="0"></div>
+                <div class="field col-span-6"><label>DEDUCCIONES QUINCENALES</label><input type="number" id="deducciones" step="0.01" min="0"></div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">2. DATOS DEL PRÉSTAMO</div>
+            <div class="section-body grid">
+                
+                <div class="field col-span-3">
+                    <label>MONTO SOLICITADO ($)</label>
+                    <input type="number" id="monto" step="0.01" min="0" max="20000">
+                </div>
+                
+                <div class="field col-span-12 screen-only">
+                    <label>PLAZO EN QUINCENAS: <span id="quincenas_val" style="font-size: 16px; color: var(--primary);">12</span></label>
+                    <div class="slider-wrapper">
+                        <input type="range" id="quincenas" min="1" max="12" value="12" step="1">
+                        <span id="tipo_prestamo_display" class="status-badge status-corto">Corto Plazo</span>
+                    </div>
+                </div>
+
+                <div class="field col-span-4 print-only">
+                    <label>CORTO PLAZO / LARGO PLAZO</label>
+                    <input type="text" id="tipo_prestamo_print" readonly value="Corto Plazo">
+                </div>
+                <div class="field col-span-2 print-only">
+                    <label>QUINCENAS</label>
+                    <input type="text" id="quincenas_print" readonly value="12">
+                </div>
+
+                <div class="field col-span-3">
+                    <label>FECHA DE SOLICITUD</label>
+                    <input type="text" id="fecha" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
+                </div>
+                
+                <div class="field col-span-12">
+                    <label>CANTIDAD CON LETRA</label>
+                    <input type="text" id="cantidad_letra" readonly class="readonly">
+                    <div id="monto_warning" class="warning" style="display:none;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">CONDICIONES SEGÚN LO DISPUESTO EN EL CAPÍTULO V DEL REGLAMENTO <br> DE OPERACIÓN DEL FONDO PARA EL RETIRO Y DE PRÉSTAMOS VIGENTE</div>
+            <div class="section-body legal-text">
+                <p><strong>ARTÍCULO 18. Tipos de préstamos:</strong></p>
+                <p>a) a corto plazo: Aquellos hasta por un monto de $10,000.00 (diez mil pesos 00/100 M.N.) pagaderos hasta en 6 meses (hasta 12 quincenas).</p>
+                <p>b) a largo plazo: Aquellos mayores a $10,000.00 (diez mil pesos 00/100 M.N.) y hasta por un monto máximo de $20,000.00 (veinte mil pesos 00/100 M.N.) pagaderos hasta en 12 meses (hasta 24 quincenas).</p>
+                <p><strong>ARTÍCULO 20.</strong> El trabajador sindicalizado que requiera de algún préstamo deberá presentar su solicitud por escrito (llenar el formato de solicitud de préstamo) y cumplir con los siguientes requisitos:</p>
+                <p>a) Ser trabajador sindicalizado;<br>
+                b) Tener un mínimo de seis meses de antigüedad como miembro del sindicato;<br>
+                c) Tener cubierto por lo menos el 50% del préstamo actual y el saldo de éste, será descontado automáticamente del nuevo préstamo.<br>
+                d) Entregar copia del comprobante de pago.<br>
+                e) Que el descuento en ningún caso sobrepase el 30% de su sueldo neto.</p>
+                <p><strong>ARTÍCULO 21.</strong> Los préstamos estarán sujetos a que exista disponibilidad en el fondo de préstamos.</p>
+            </div>
+        </div>
+
+        <div class="firma-container">
+            <!-- Este es el contenedor vital que recibe el nombre del JS -->
+            <div id="nombre_firma_print" style="text-transform: uppercase; margin-bottom: 2px; font-size: 14px; font-weight: bold; min-height: 20px;"></div>
+
+            <div class="firma-line">
+                NOMBRE Y FIRMA DEL SOLICITANTE
+            </div>
+            <div class="form-id">F2026-XCEE</div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <button id="btn-print-filled" type="button" class="btn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            Descargar / Guardar como PDF
+        </button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

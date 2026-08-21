@@ -1,0 +1,250 @@
+:root {
+    --primary: #A9341B;
+    --primary-light: #c04f37;
+    --primary-dark: #822714;
+    --bg-color: #f4f0ef;
+    --surface: #ffffff;
+    --text: #333333;
+    --border: #dddddd;
+}
+* { box-sizing: border-box; }
+body {
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0; padding: 20px 0; color: var(--text);
+}
+.app-container {
+    max-width: 900px; margin: 0 auto;
+}
+.top-bar, .bottom-bar {
+    text-align: center; margin: 20px 0;
+}
+.btn {
+    background-color: var(--primary); color: white;
+    border: none; padding: 12px 24px; font-size: 16px;
+    border-radius: 8px; cursor: pointer; font-weight: 600;
+    transition: background 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: inline-flex; align-items: center; gap: 8px;
+}
+.btn:hover { background-color: var(--primary-dark); }
+.btn-secondary {
+    background-color: var(--surface); color: var(--primary);
+    border: 2px solid var(--primary); box-shadow: none;
+}
+.btn-secondary:hover {
+    background-color: var(--primary); color: white;
+}
+/* === LOGO SUPERIOR IZQUIERDO === */
+.logo-institucional {
+    position: absolute;
+    top: 0;
+    left: 20px;
+    width: 75px; /* Tamaño ideal y proporcionado para pantalla */
+    z-index: 2;
+}
+
+/* === CONFIGURACIÓN DE LA HOJA Y MARCA DE AGUA (PANTALLA) === */
+.sheet {
+    position: relative;
+}
+
+.sheet::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: url('logo.svg') no-repeat center center;
+    background-size: 65%; 
+    opacity: 0.08; 
+    pointer-events: none;
+    z-index: 0;
+}
+
+.header, .section, .firma-container {
+    position: relative;
+    z-index: 1;
+}
+/* ================================================ */
+
+.header {
+    text-align: center; border-bottom: 3px solid var(--primary);
+    padding-bottom: 15px; margin-bottom: 25px;
+}
+.header h1 { font-size: 24px; margin: 0 0 5px 0; }
+.header h2 { color: var(--primary); font-size: 18px; margin: 0 0 5px 0; font-weight: 400; font-weight: bold;
+}
+.section {
+    border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 25px; overflow: hidden;
+}
+.section-title {
+    background: var(--primary); color: white;
+    padding: 10px 15px; font-weight: 600; font-size: 15px;
+    text-align: center;
+}
+.section-title-main {
+    background: var(--surface); color: var(--primary);
+    padding: 10px 15px; font-weight: 600; font-size: 18px; text-align: center;font-weight: bold;
+}
+.section-body {
+    padding: 20px; background: rgba(250, 249, 249, 0.85); 
+}
+.grid {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px;
+}
+.field {
+    display: flex; flex-direction: column;
+}
+.col-span-12 { grid-column: span 12; }
+.col-span-8 { grid-column: span 8; }
+.col-span-6 { grid-column: span 6; }
+.col-span-4 { grid-column: span 4; }
+.col-span-3 { grid-column: span 3; }
+.col-span-2 { grid-column: span 2; }
+.field label {
+    font-size: 12px; font-weight: 700; margin-bottom: 5px;
+    color: var(--primary-dark); text-transform: uppercase;
+}
+.field input, .field select {
+    padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;
+    background: rgba(255, 255, 255, 0.9); transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus {
+    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(169, 52, 27, 0.15);
+}
+.readonly { background-color: rgba(238, 238, 238, 0.8) !important; cursor: not-allowed; }
+.slider-wrapper {
+    display: flex; align-items: center; gap: 15px; background: white;
+    padding: 10px 15px; border-radius: 6px; border: 1px solid #ccc;
+}
+input[type=range] { flex: 1; accent-color: var(--primary); }
+.status-badge {
+    padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 12px;
+}
+.status-corto { background: #e3f2fd; color: #1565c0; }
+.status-largo { background: #fff3e0; color: #e65100; }
+.warning { color: #d32f2f; font-size: 12px; margin-top: 5px; font-weight: 600; }
+.legal-text {
+    font-size: 12px; color: #444; line-height: 1.5; text-align: justify;
+}
+.legal-text p { margin: 0 0 10px 0; }
+.legal-text p:last-child { margin: 0; }
+.firma-container {
+    text-align: center; margin-top: 60px;
+}
+.firma-line {
+    border-top: 2px solid var(--text); width: 300px; margin: 0 auto;
+    padding-top: 10px; font-weight: bold;
+}
+.form-id {
+    text-align: right; font-size: 10px; color: #888; margin-top: 20px;
+}
+.print-only { display: none; }
+.screen-only { display: flex; }
+
+/* === MODO IMPRESIÓN / PDF (TAMAÑO CARTA - 1 SOLA HOJA) === */
+@media print {
+    @page { size: letter; margin: 10mm; } /* Márgenes reducidos para ganar espacio */
+    body { background-color: white; padding: 0; margin: 0; height: 100%; }
+    .top-bar, .bottom-bar { display: none !important; }
+    .app-container { max-width: 100%; margin: 0; }
+    
+    /* El contenedor ahora está bloqueado a la altura de una página (98vh) para evitar saltos */
+    .sheet { 
+        padding: 0; 
+        box-shadow: none; 
+        border-radius: 0; 
+        display: flex;
+        flex-direction: column;
+        height: 98vh; 
+        overflow: hidden; 
+        box-sizing: border-box;
+    }
+    
+    .sheet::before {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        opacity: 0.1 !important; 
+        background-size: 70%; /* Tamaño ajustado del logo */
+    }
+
+    /* Ajustes compactos para los encabezados */
+    .header { padding-bottom: 10px; margin-bottom: 10px; border-bottom: 2px solid black; }
+    .header h1 { font-size: 12pt; color: black !important; margin-bottom: 4px;}
+    .header h2 { font-size: 10pt; color: black !important; margin-bottom: 4px;}
+
+    .section { border: 1px solid black; margin-bottom: 10px; border-radius: 0; page-break-inside: avoid; }
+    
+    /* Títulos de sección optimizados */
+    .section-title, .section-title-main {
+        background: #e0e0e0 !important; color: black !important;
+        padding: 4px 8px; font-size: 9pt; font-weight: bold;
+        -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        border-bottom: 1px solid black;
+    }
+    .section-title-main { text-align: center; font-size: 10pt; }
+    
+    .section-body { padding: 8px; background: transparent !important; }
+    
+    /* Grid y campos más ajustados */
+    .grid { gap: 8px 6px; }
+    .field label { font-size: 7.5pt; color: black !important; margin-bottom: 2px; }
+    .field input, .field select {
+        padding: 2px; border: none; border-bottom: 1px solid black;
+        border-radius: 0; font-size: 9.5pt; height: auto;
+        background: transparent !important; color: black !important;
+        -webkit-appearance: none; -moz-appearance: none; appearance: none;
+    }
+    input::placeholder { color: transparent; }
+    .screen-only { display: none !important; }
+    .print-only { display: flex; }
+    
+    /* Texto legal más compacto pero legible */
+    .legal-text { font-size: 8pt; line-height: 1.2; padding: 6px 8px; }
+    .legal-text p { margin: 0 0 4px 0; }
+    
+    /* Empujamos las firmas al final del espacio disponible sin desbordar */
+    .firma-container { 
+        margin-top: auto; 
+        padding-top: 15px; 
+        page-break-inside: avoid; 
+    }
+    .firma-line { width: 280px; font-size: 9pt; border-top: 1px solid black; padding-top: 6px; }
+    .form-id { font-size: 7pt; margin-top: 5px; color: black !important; }
+    .warning { display: none !important; }
+}
+
+/* === RESPONSIVO PARA CELULARES Y PANTALLAS PEQUEÑAS (EXCLUYE IMPRESIÓN) === */
+@media screen and (max-width: 768px) {
+    body { 
+        padding: 10px; 
+    }
+    .app-container { 
+        max-width: 100%; 
+        padding: 0; 
+    }
+    .sheet { 
+        padding: 15px; 
+    }
+    /* Forzar que todos los campos pasen a ocupar todo el ancho en celulares (solo pantalla) */
+    .grid { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 12px; 
+    }
+    .field { 
+        width: 100% !important; 
+    }
+    .slider-wrapper { 
+        flex-direction: column; 
+        align-items: stretch; 
+        gap: 10px; 
+    }
+    .top-bar, .bottom-bar { 
+        padding: 0 10px; 
+    }
+    .btn { 
+        width: 100%; 
+        justify-content: center; 
+    }
+}
