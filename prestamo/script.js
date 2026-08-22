@@ -147,78 +147,33 @@ async function procesarPDF(esBlanco = false) {
     const btnBlanco = document.getElementById('btn-print-blank');
     const textoOriginal = esBlanco ? btnBlanco.innerHTML : btnLleno.innerHTML;
     
-    // Cambiar estado del botón a "Cargando..."
+    // Cambiamos temporalmente el texto del botón para dar retroalimentación visual
     if(esBlanco) btnBlanco.innerHTML = '⏳ Descargando...';
-    else btnLleno.innerHTML = '⏳ Generando...';
+    else btnLleno.innerHTML = '⏳ Descargando...';
 
     try {
+        // 1. Creamos un elemento <a> invisible
+        const link = document.createElement('a');
+        
+        // 2. Determinamos qué archivo descargar según la opción elegida
         if (esBlanco) {
-            // === RUTA 1: DESCARGA DIRECTA (MÁS RÁPIDA) ===
-            // Solo se ejecuta cuando bajan el formato en blanco
-            const link = document.createElement('a');
             link.href = 'BasePrestamo.pdf'; 
             link.download = 'Solicitud_SUTCBEBCS_Blanco.pdf'; 
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
         } else {
-            // === RUTA 2: MOTOR PDF-LIB (INYECCIÓN DE DATOS) ===
-            // Se ejecuta cuando quieren descargar la solicitud llenada
-            const urlPlantilla = 'BasePrestamo.pdf';
-            const pdfBytesArray = await fetch(urlPlantilla).then(res => res.arrayBuffer());
-            const pdfDoc = await PDFLib.PDFDocument.load(pdfBytesArray);
-            
-            pdfDoc.registerFontkit(window.fontkit);
-            const form = pdfDoc.getForm();
-
-            // Mapeo de campos
-            llenarCampoSeguro(form, 'APELLIDO PATERNO', document.getElementById('ap_paterno').value);
-            llenarCampoSeguro(form, 'APELLIDO MATERNO', document.getElementById('ap_materno').value);
-            llenarCampoSeguro(form, 'NOMBRE S', document.getElementById('nombres').value);
-            llenarCampoSeguro(form, 'DOMICILIO CALLE COLONIA Y CP', document.getElementById('domicilio').value);
-            llenarCampoSeguro(form, 'CIUDAD', document.getElementById('ciudad').value);
-            llenarCampoSeguro(form, 'TELEFONO', document.getElementById('telefono').value);
-            llenarCampoSeguro(form, 'CORREO ELECTRONICO', document.getElementById('email').value);
-            llenarCampoSeguro(form, 'CLABE', document.getElementById('clabe').value);
-            llenarCampoSeguro(form, 'BANCO', document.getElementById('banco').value);
-            llenarCampoSeguro(form, 'CENTRO', document.getElementById('centro').value);
-            llenarCampoSeguro(form, 'PUESTO', document.getElementById('puesto').value);
-            llenarCampoSeguro(form, 'TURNO', document.getElementById('turno').value);
-            llenarCampoSeguro(form, 'SUELDO NETO QUINCENAL', document.getElementById('sueldo').value);
-            llenarCampoSeguro(form, 'DEDUCCIONES QUINCENALES', document.getElementById('deducciones').value);
-            
-            // Datos del Préstamo
-            llenarCampoSeguro(form, 'MONTO SOLICITADO', document.getElementById('monto').value);
-            llenarCampoSeguro(form, 'CORTO PLAZO LARGO PLAZO', tipoPrestamoGlobal);
-            llenarCampoSeguro(form, 'QUINCENAS', document.getElementById('quincenas').value);
-            llenarCampoSeguro(form, 'FECHA DE SOLICITUD', document.getElementById('fecha').value);
-            llenarCampoSeguro(form, 'CANTIDAD CON LETRA', document.getElementById('cantidad_letra').value);
-
-            // Nombre de Firma Combinado
-            const nombreCompleto = `${document.getElementById('nombres').value} ${document.getElementById('ap_paterno').value} ${document.getElementById('ap_materno').value}`.trim();
-            llenarCampoSeguro(form, 'NOMBRE Y FIRMA DEL SOLICITANTE', nombreCompleto);
-
-            // Aplastamos el PDF para que el texto sea no editable
-            form.flatten();
-
-            // Generamos y descargamos el archivo lleno
-            const pdfModificadoBytes = await pdfDoc.save();
-            const blob = new Blob([pdfModificadoBytes], { type: 'application/pdf' });
-            
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'Solicitud_SUTCBEBCS_Llena.pdf';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            link.href = 'BasePrestamoLlenado.pdf'; 
+            link.download = 'Solicitud_SUTCBEBCS_Llena.pdf'; 
         }
+        
+        // 3. Lo agregamos al documento, simulamos el clic y lo eliminamos
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
 
     } catch (error) {
-        console.error('Error al procesar/descargar el PDF:', error);
-        alert("Ocurrió un error. Verifica que el archivo 'BasePrestamo.pdf' se encuentre subido en la misma carpeta del servidor.");
+        console.error('Error al intentar descargar el PDF:', error);
+        alert("Ocurrió un error. Verifica que los archivos PDF correspondientes se encuentren en el servidor.");
     } finally {
-        // Restaurar texto del botón original
+        // Restauramos el texto original del botón
         if(esBlanco) btnBlanco.innerHTML = textoOriginal;
         else btnLleno.innerHTML = textoOriginal;
     }
