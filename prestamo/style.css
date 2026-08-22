@@ -1,0 +1,80 @@
+:root {
+    --primary: #A9341B;
+    --primary-light: #c04f37;
+    --primary-dark: #822714;
+    --bg-color: #f4f0ef;
+    --surface: #ffffff;
+    --text: #333333;
+    --border: #dddddd;
+}
+* { box-sizing: border-box; }
+body {
+    background-color: var(--bg-color);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0; padding: 20px 10px; color: var(--text);
+}
+.app-container {
+    max-width: 900px; margin: 0 auto;
+}
+.top-bar, .bottom-bar {
+    text-align: center; margin: 20px 0;
+}
+.btn {
+    background-color: var(--primary); color: white;
+    border: none; padding: 12px 24px; font-size: 16px;
+    border-radius: 8px; cursor: pointer; font-weight: 600;
+    transition: background 0.3s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: inline-flex; align-items: center; gap: 8px;
+    width: 100%; justify-content: center;
+}
+@media(min-width: 768px) { .btn { width: auto; } }
+.btn:hover { background-color: var(--primary-dark); }
+.btn-secondary {
+    background-color: var(--surface); color: var(--primary);
+    border: 2px solid var(--primary); box-shadow: none;
+}
+.btn-secondary:hover { background-color: var(--primary); color: white; }
+
+.logo-institucional { position: absolute; top: 0; left: 0; width: 75px; z-index: 2; }
+.sheet { position: relative; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+.sheet::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: url('logo.svg') no-repeat center center;
+    background-size: 65%; opacity: 0.05; pointer-events: none; z-index: 0;
+}
+
+.header { text-align: center; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; position: relative; z-index: 1;}
+.header h1 { font-size: 20px; margin: 0 0 5px 0; }
+.header h2 { color: var(--primary); font-size: 16px; margin: 0 0 5px 0; font-weight: bold; }
+@media(min-width: 768px) { .header h1 { font-size: 24px; } .header h2 { font-size: 18px; } }
+
+.section { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 25px; overflow: hidden; position: relative; z-index: 1;}
+.section-title { background: var(--primary); color: white; padding: 10px 15px; font-weight: 600; font-size: 15px; text-align: center; }
+.section-title-main { color: var(--primary); padding: 10px 15px; font-size: 18px; text-align: center; font-weight: bold; position: relative; z-index: 1;}
+.section-body { padding: 20px; background: rgba(250, 249, 249, 0.85); }
+
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px; }
+.field { display: flex; flex-direction: column; grid-column: span 12; }
+@media(min-width: 768px) {
+    .col-span-12 { grid-column: span 12; }
+    .col-span-8 { grid-column: span 8; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-3 { grid-column: span 3; }
+    .col-span-2 { grid-column: span 2; }
+}
+
+.field label { font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--primary-dark); text-transform: uppercase; }
+.field input, .field select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; background: rgba(255, 255, 255, 0.9); box-sizing: border-box; width: 100%; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(169, 52, 27, 0.15); }
+.readonly { background-color: rgba(238, 238, 238, 0.8) !important; cursor: not-allowed; }
+
+.slider-wrapper { display: flex; align-items: center; gap: 15px; background: white; padding: 10px 15px; border-radius: 6px; border: 1px solid #ccc; }
+@media(max-width: 768px) { .slider-wrapper { flex-direction: column; align-items: stretch; } }
+input[type=range] { flex: 1; accent-color: var(--primary); }
+
+.status-badge { padding: 5px 10px; border-radius: 4px; font-weight: bold; font-size: 12px; text-align: center; white-space: nowrap; }
+.status-corto { background: #e3f2fd; color: #1565c0; }
+.status-largo { background: #fff3e0; color: #e65100; }
+.warning { color: #d32f2f; font-size: 12px; margin-top: 5px; font-weight: 600; text-align: center;}
