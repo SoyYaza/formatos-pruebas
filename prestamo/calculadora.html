@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Pagos y Tabla de Amortización - SUTCBEBCS</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .amort-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13px;
+            background: white;
+        }
+        .amort-table th, .amort-table td {
+            border: 1px solid #e2dad6;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .amort-table th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+        .amort-table tr:nth-child(even) {
+            background-color: #f9f6f5;
+        }
+        .summary-box {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            background: linear-gradient(135deg, #fdfbf7 0%, #f4f0ef 100%);
+            border: 1px solid #e2dad6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .summary-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-dark);
+            text-transform: uppercase;
+        }
+        .summary-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--text);
+            margin-top: 4px;
+        }
+        /* Estilo para resaltar la quincena actual / próximo pago */
+        .amort-table tr.current-row {
+            background-color: rgba(169, 52, 27, 0.12) !important;
+            border-left: 4px solid var(--primary);
+        }
+        .current-badge {
+            background-color: var(--primary);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            margin-left: 6px;
+            display: inline-block;
+        }
+
+/* Estilos optimizados y profesionales para impresión en 1 sola hoja */
+        @media print {
+            @page {
+                size: portrait;
+                margin: 8mm;
+            }
+
+            /* Ocultar elementos de navegación y controles de edición */
+            .top-bar, 
+            div[style*="margin-top: 30px; text-align: center;"] {
+                display: none !important;
+            }
+
+            /* Ocultar por completo la sección 1 (Parámetros) al imprimir para ganar espacio limpio */
+            .section:nth-of-type(1) {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                font-size: 10px !important;
+                color: #222 !important;
+                font-family: 'Segoe UI', Arial, sans-serif !important;
+            }
+
+            .sheet {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+
+            .app-container {
+                max-width: 100% !important;
+                padding: 0 !important;
+            }
+
+            .header {
+                margin-bottom: 8px !important;
+                border-bottom: 2px solid var(--primary);
+                padding-bottom: 6px;
+            }
+
+            .header img.logo-institucional {
+                width: 45px !important;
+                margin-bottom: 2px !important;
+            }
+
+            .header h1 {
+                font-size: 14px !important;
+                margin-bottom: 2px !important;
+                color: #111 !important;
+            }
+
+            .header h2 {
+                font-size: 10px !important;
+                margin-bottom: 4px !important;
+                color: var(--primary) !important;
+            }
+
+            .section-title-main {
+                font-size: 13px !important;
+                margin-bottom: 2px !important;
+                font-weight: bold;
+                color: #111 !important;
+            }
+
+            /* Subtítulo aclaratorio más sutil */
+            div[style*="text-align: center; margin-bottom: 20px;"] {
+                font-size: 9px !important;
+                margin-bottom: 8px !important;
+                color: #666 !important;
+            }
+
+            .section {
+                margin-bottom: 8px !important;
+            }
+
+            .section-title {
+                background: var(--primary) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 4px 8px !important;
+                font-size: 10.5px !important;
+                margin-bottom: 4px !important;
+                border-radius: 4px 4px 0 0;
+            }
+
+            /* Estilo ejecutivo para el resumen global */
+            .summary-box {
+                background: #fdfbf7 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border: 1px solid #dcd6d0 !important;
+                padding: 8px 12px !important;
+                margin-bottom: 8px !important;
+                gap: 8px !important;
+                border-radius: 0 0 6px 6px;
+            }
+
+            .summary-value {
+                font-size: 13px !important;
+            }
+
+            .summary-label {
+                font-size: 9px !important;
+                color: #555 !important;
+            }
+
+            /* Estilo impecable para la tabla de amortización */
+            .amort-table {
+                font-size: 10px !important;
+                margin-top: 2px !important;
+                border-collapse: collapse !important;
+                width: 100% !important;
+            }
+
+            .amort-table th {
+                background-color: var(--primary) !important;
+                color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 4px 6px !important;
+                font-size: 10px !important;
+            }
+
+            .amort-table td {
+                padding: 3.5px 6px !important;
+                border: 1px solid #dcd6d0 !important;
+            }
+
+            .amort-table tr:nth-child(even) {
+                background-color: #faf8f6 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* Fila de la quincena actual / próximo pago */
+            .amort-table tr.current-row {
+                background-color: rgba(169, 52, 27, 0.08) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                border-left: 3px solid var(--primary) !important;
+            }
+
+            .current-badge {
+                border: 1px solid var(--primary);
+                color: var(--primary) !important;
+                background: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                font-size: 8px !important;
+                padding: 1px 4px !important;
+                font-weight: bold;
+                border-radius: 3px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container" style="max-width: 1000px;">
+    <div class="top-bar">
+        <a href="/formatos/index.html" class="btn btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Volver al Sistema de Formatos Sindicales
+        </a>
+    </div>
+
+    <div class="sheet">
+        <div class="header">
+            <img src="logo.svg" class="logo-institucional" alt="Logo SUTCBEBCS">
+            <h1>Sindicato Único de Trabajadores del Colegio de Bachilleres <br> del Estado de Baja California Sur</h1>
+            <h2>X COMITÉ EJECUTIVO ESTATAL</h2>
+        </div>
+        
+        <div class="section-title-main">SIMULADOR Y TABLA DE AMORTIZACIÓN DE PRÉSTAMOS</div>
+        <div style="text-align: center; margin-bottom: 20px; font-size: 13px; color: var(--text-muted);">
+            Proyección estimada de descuentos quincenales (Sin valor oficial ni almacenamiento de datos personales)
+        </div>
+
+        <!-- Parámetros de Entrada -->
+        <div class="section">
+            <div class="section-title">1. PARÁMETROS DEL PRÉSTAMO</div>
+            <div class="section-body grid">
+                <div class="field col-span-4">
+                    <label>MONTO SOLICITADO ($)</label>
+                    <input type="number" id="calc_monto" step="0.01" min="100" max="20000" value="15000" oninput="calcularTabla()">
+                </div>
+                <div class="field col-span-4">
+                    <label>PLAZO EN QUINCENAS (<span id="lbl_quincenas">12</span>)</label>
+                    <input type="range" id="calc_quincenas" min="1" max="24" value="12" step="1" oninput="calcularTabla()" style="width: 100%; margin-top: 10px; cursor: pointer;">
+                </div>
+                <div class="field col-span-4">
+                    <label>FECHA DEL PRIMER DESCUENTO</label>
+                    <input type="date" id="calc_fecha" onchange="calcularTabla()" style="text-align: center;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen Financiero -->
+        <div class="section">
+            <div class="section-title">2. RESUMEN GLOBAL PROYECTADO</div>
+            <div class="section-body">
+                <div class="summary-box">
+                    <div class="summary-item">
+                        <span class="summary-label">Monto Solicitado (Capital)</span>
+                        <span id="res_capital" class="summary-value" style="color: var(--primary);">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Interés Total (1% Quincenal)</span>
+                        <span id="res_interes" class="summary-value" style="color: #555;">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Total a Pagar con Interés</span>
+                        <span id="res_total" class="summary-value" style="color: #2c3e50;">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Pago Fijo Quincenal</span>
+                        <span id="res_pago_q" class="summary-value" style="color: var(--primary-dark);">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla Detallada de Amortización -->
+        <div class="section">
+            <div class="section-title">3. PROYECCIÓN DE DESCUENTOS QUINCENALES</div>
+            <div class="section-body" style="overflow-x: auto;">
+                <table class="amort-table">
+                    <thead>
+                        <tr>
+                            <th>No. Quincena</th>
+                            <th>Fecha de Descuento</th>
+                            <th>Capital</th>
+                            <th>Interés (1%)</th>
+                            <th>Pago Quincenal</th>
+                            <th>Saldo Restante</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla_amortizacion">
+                        <!-- Generado por JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Función para obtener la quincena anterior (15 o fin de mes) menor o igual a la fecha de referencia
+    function obtenerQuincenaAnterior(fechaRef) {
+        let y = fechaRef.getFullYear();
+        let m = fechaRef.getMonth(); // 0-11
+        
+        let c1 = new Date(y, m, 0);     // Fin del mes anterior
+        let c2 = new Date(y, m, 15);    // 15 del mes actual
+        let c3 = new Date(y, m + 1, 0); // Fin del mes actual
+
+        let candidatos = [c1, c2, c3].filter(c => c <= fechaRef);
+        let maxDate = new Date(Math.max.apply(null, candidatos));
+        return maxDate.toISOString().split('T')[0];
+    }
+
+    // Función para calcular la siguiente quincena exacta (15 o fin de mes)
+    function obtenerSiguienteQuincena(fechaStr) {
+        let partes = fechaStr.split('-');
+        let y = parseInt(partes[0]);
+        let m = parseInt(partes[1]) - 1; // 0-11
+        let d = parseInt(partes[2]);
+
+        let fechaNext = new Date(y, m, d);
+
+        if (d <= 15) {
+            // Si el día es 15 o antes, el siguiente pago es el fin de este mismo mes
+            fechaNext = new Date(y, m + 1, 0); 
+        } else {
+            // Si el día es mayor a 15, el siguiente pago es el 15 del próximo mes
+            fechaNext = new Date(y, m + 1, 15);
+        }
+
+        return fechaNext.toISOString().split('T')[0];
+    }
+
+    function formatearFecha(fechaStr) {
+        if (!fechaStr) return '';
+        let partes = fechaStr.split('-');
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    // Inicializar por defecto con la quincena anterior al día actual
+    let hoyRef = new Date();
+    hoyRef.setHours(0, 0, 0, 0);
+    document.getElementById('calc_fecha').value = obtenerQuincenaAnterior(hoyRef);
+
+    function calcularTabla() {
+        let montoInput = document.getElementById('calc_monto');
+        let monto = parseFloat(montoInput.value) || 0;
+        
+        // Limitar estrictamente al máximo permitido ($20,000)
+        if (monto > 20000) {
+            monto = 20000;
+            montoInput.value = 20000;
+        }
+        if (monto < 0) monto = 0;
+
+        let quincenas = parseInt(document.getElementById('calc_quincenas').value) || 1;
+        let fechaInicio = document.getElementById('calc_fecha').value;
+
+        // Actualizar etiqueta del slider
+        document.getElementById('lbl_quincenas').textContent = quincenas;
+
+        // Cálculos financieros (Interés simple del 1% quincenal)
+        let interesTotal = monto * 0.01 * quincenas;
+        let totalPagar = monto + interesTotal;
+        let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
+        let capitalQuincenal = quincenas > 0 ? monto / quincenas : 0;
+        let interesQuincenal = quincenas > 0 ? interesTotal / quincenas : 0;
+
+        // Mostrar en el resumen global
+        document.getElementById('res_capital').textContent = '$' + monto.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('res_interes').textContent = '$' + interesTotal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('res_total').textContent = '$' + totalPagar.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('res_pago_q').textContent = '$' + pagoQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+        // Generar arreglo de fechas estrictas de quincena
+        let fechaTemp = fechaInicio;
+        let fechasArray = [];
+        for (let i = 1; i <= quincenas; i++) {
+            fechasArray.push(fechaTemp);
+            if (fechaTemp) {
+                fechaTemp = obtenerSiguienteQuincena(fechaTemp);
+            }
+        }
+
+        // Detectar cuál fila es la del "Próximo Pago" basándose en el día de hoy
+        let hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        let targetIndex = -1;
+        for (let i = 0; i < fechasArray.length; i++) {
+            let f = new Date(fechasArray[i] + 'T00:00:00');
+            if (f >= hoy) {
+                targetIndex = i;
+                break;
+            }
+        }
+        if (targetIndex === -1 && fechasArray.length > 0) {
+            targetIndex = fechasArray.length - 1;
+        }
+
+        // Generar filas de la tabla detallada
+        let tbody = document.getElementById('tabla_amortizacion');
+        tbody.innerHTML = '';
+
+        let saldoInsoluto = monto;
+
+        for (let i = 1; i <= quincenas; i++) {
+            saldoInsoluto -= capitalQuincenal;
+            if (saldoInsoluto < 0.01) saldoInsoluto = 0;
+
+            let fechaFila = fechasArray[i - 1];
+            let esActual = (i - 1) === targetIndex;
+
+            let tr = document.createElement('tr');
+            if (esActual) {
+                tr.className = 'current-row';
+            }
+
+            tr.innerHTML = `
+                <td style="font-weight: bold;">
+                    ${i} ${esActual ? '<span class="current-badge">Próximo Pago</span>' : ''}
+                </td>
+                <td>${formatearFecha(fechaFila)}</td>
+                <td>$${capitalQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td>$${interesQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td style="font-weight: bold; color: var(--primary);">$${pagoQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+                <td>$${saldoInsoluto.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+            `;
+            tbody.appendChild(tr);
+        }
+    }
+
+    // Ejecutar al cargar la página
+    calcularTabla();
+</script>
+<!-- Barra inferior con el botón de impresión -->
+    <div style="margin-top: 30px; text-align: center; padding-bottom: 20px;">
+        <button type="button" class="btn" onclick="window.print()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(169, 52, 27, 0.2); transition: background-color 0.2s;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"></path></svg>
+            Imprimir / Guardar Proyección (PDF)
+        </button>
+    </div>
+</body>
+</html>
