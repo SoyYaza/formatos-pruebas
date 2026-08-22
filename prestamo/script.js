@@ -47,7 +47,11 @@ function updatePrestamo() {
     } else {
         warning.style.display = 'none';
     }
-    cantidadLetra.value = NumeroALetras(monto);
+
+    // Calcular y asignar la cantidad con letra en el formulario web
+    const textoLetras = NumeroALetras(monto);
+    cantidadLetra.value = textoLetras;
+    console.log("💰 Monto ingresado:", monto, "-> Letras generadas:", textoLetras);
 }
 
 montoInput.addEventListener('input', function() {
@@ -129,36 +133,96 @@ function NumeroALetras(num) {
     return letras + ' ' + centavosStr;
 }
 
-// Función especializada y con depuración para campos de Adobe Acrobat Pro
-function llenarCampoSeguro(form, nombres, valor, esDropdown = false) {
-    if (!valor) return;
+// Función universal inteligente y tolerante a variaciones
+function llenarCampoSeguro(form, nombres, valor) {
+    if (!valor && valor !== 0) return;
     const listaNombres = Array.isArray(nombres) ? nombres : [nombres];
     const valStr = valor.toString().trim().toUpperCase();
 
-    for (const nombre of listaNombres) {
-        try {
-            if (esDropdown) {
-                // Intentar llenar como Lista Desplegable (Dropdown de Adobe Pro)
-                const dropdown = form.getDropdown(nombre);
-                if (dropdown) {
-                    dropdown.select(valStr);
-                    console.log(`✅ Dropdown '${nombre}' seleccionado con éxito: "${valStr}"`);
-                    return;
-                }
-            } else {
-                // Intentar llenar como Campo de Texto normal
-                const campoTexto = form.getTextField(nombre);
-                if (campoTexto) {
-                    campoTexto.setText(valStr);
-                    console.log(`✅ Texto '${nombre}' llenado con éxito: "${valStr}"`);
-                    return;
+    const allFields = form.getFields();
+
+    for (const nombreBuscado of listaNombres) {
+        const busquedaUpper = nombreBuscado.toUpperCase().trim();
+        
+        for (const field of allFields) {
+            const realName = field.getName().toUpperCase().trim();
+            
+            if (realName === busquedaUpper || realName.includes(busquedaUpper)) {
+                try {
+                    const dropdown = form.getDropdown(field.getName());
+                    if (dropdown) {
+                        dropdown.select(valStr);
+                        console.log(`✅ Dropdown '${field.getName()}' seleccionado: "${valStr}"`);
+                        return;
+                    }
+                } catch (e1) {
+                    try {
+                        const campoTexto = form.getTextField(field.getName());
+                        if (campoTexto) {
+                            campoTexto.setText(valStr);
+                            console.log(`✅ Texto '${field.getName()}' llenado: "${valStr}"`);
+                            return;
+                        }
+                    } catch (e2) {
+                        try {
+                            const radio = form.getRadioGroup(field.getName());
+                            if (radio) {
+                                radio.select(valStr);
+                                console.log(`✅ Radio '${field.getName()}' seleccionado: "${valStr}"`);
+                                return;
+                            }
+                        } catch (e3) {}
+                    }
                 }
             }
-        } catch (error) {
-            // Silencioso para que intente con el siguiente nombre en caso de error
         }
     }
     console.warn(`⚠️ No se pudo encontrar o llenar el campo. Buscados:`, listaNombres);
+}
+
+function updatePrestamo() {
+    let monto = parseFloat(montoInput.value) || 0;
+    
+    if (monto > 10000) {
+        quincenasInput.min = 12;
+        quincenasInput.max = 24;
+        tipoPrestamoGlobal = 'LARGO PLAZO';
+        if (parseInt(quincenasInput.value) < 12) quincenasInput.value = 12;
+    } else {
+        quincenasInput.min = 1;
+        quincenasInput.max = 12;
+        tipoPrestamoGlobal = 'CORTO PLAZO';
+        if (parseInt(quincenasInput.value) > 12) quincenasInput.value = 12;
+    }
+
+    let quincenas = parseInt(quincenasInput.value) || 12;
+    quincenasLabel.textContent = quincenas;
+    tipoPrestamoDisplay.textContent = tipoPrestamoGlobal;
+
+    if (tipoPrestamoGlobal === 'CORTO PLAZO') {
+        tipoPrestamoDisplay.className = 'status-badge status-corto';
+    } else {
+        tipoPrestamoDisplay.className = 'status-badge status-largo';
+    }
+
+    if (monto > 20000) {
+        warning.textContent = '⚠️ El monto excede el máximo permitido ($20,000.00 M.N.).';
+        warning.style.display = 'block';
+    } else {
+        warning.style.display = 'none';
+    }
+
+    // --- CÁLCULOS FINANCIEROS (Interés simple del 1% quincenal) ---
+    let interesTotal = monto * 0.01 * quincenas;
+    let totalPagar = monto + interesTotal;
+    let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
+
+    // Mostrar en el panel visual
+    document.getElementById('pago_quincenal').textContent = '$' + pagoQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('interes_total').textContent = '$' + interesTotal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('total_pagar').textContent = '$' + totalPagar.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
+    cantidadLetra.value = NumeroALetras(monto);
 }
 
 // === GESTOR DE DESCARGAS Y LLENADO DINÁMICO DE PDF ===
@@ -172,7 +236,6 @@ async function procesarPDF(esBlanco = false) {
 
     try {
         if (esBlanco) {
-            // Descarga directa del formato en blanco
             const link = document.createElement('a');
             link.href = 'BasePrestamo.pdf'; 
             link.download = 'Prestamo Sindical XCEE.pdf'; 
@@ -180,7 +243,6 @@ async function procesarPDF(esBlanco = false) {
             link.click();
             document.body.removeChild(link);
         } else {
-            // Llenado dinámico utilizando BasePrestamo.pdf como plantilla
             const urlPlantilla = 'BasePrestamo.pdf';
             const pdfBytesArray = await fetch(urlPlantilla).then(res => res.arrayBuffer());
 
@@ -188,39 +250,37 @@ async function procesarPDF(esBlanco = false) {
             pdfDoc.registerFontkit(window.fontkit);
             const form = pdfDoc.getForm();
 
-            // --- 1. CAMPOS DE TEXTO NORMALES (esDropdown = false) ---
-            llenarCampoSeguro(form, ['APELLIDO PATERNO'], document.getElementById('ap_paterno').value, false);
-            llenarCampoSeguro(form, ['APELLIDO MATERNO'], document.getElementById('ap_materno').value, false);
-            llenarCampoSeguro(form, ['NOMBRE S', 'NOMBRES', 'NOMBRE (S)'], document.getElementById('nombres').value, false);
-            llenarCampoSeguro(form, ['DOMICILIO CALLE COLONIA Y CP', 'DOMICILIO'], document.getElementById('domicilio').value, false);
-            llenarCampoSeguro(form, ['TELEFONO', 'TELÉFONO'], document.getElementById('telefono').value, false);
-            llenarCampoSeguro(form, ['CORREO ELECTRÓNICO', 'CORREO ELECTRONICO'], document.getElementById('email').value, false);
-            llenarCampoSeguro(form, ['CLABE', 'CUENTA CLABE'], document.getElementById('clabe').value, false);
-            llenarCampoSeguro(form, ['BANCO'], document.getElementById('banco').value, false);
-            llenarCampoSeguro(form, ['PUESTO'], document.getElementById('puesto').value, false);
-            llenarCampoSeguro(form, ['SUELDO NETO QUINCENAL', 'SUELDO'], document.getElementById('sueldo').value, false);
-            llenarCampoSeguro(form, ['DEDUCCIONES QUINCENALES', 'DEDUCCIONES'], document.getElementById('deducciones').value, false);
+            // Mapeo general de campos
+            llenarCampoSeguro(form, ['APELLIDO PATERNO'], document.getElementById('ap_paterno').value);
+            llenarCampoSeguro(form, ['APELLIDO MATERNO'], document.getElementById('ap_materno').value);
+            llenarCampoSeguro(form, ['NOMBRE S', 'NOMBRES', 'NOMBRE (S)'], document.getElementById('nombres').value);
+            llenarCampoSeguro(form, ['DOMICILIO CALLE COLONIA Y CP', 'DOMICILIO'], document.getElementById('domicilio').value);
+            llenarCampoSeguro(form, ['CIUDAD'], document.getElementById('ciudad').value);
+            llenarCampoSeguro(form, ['TELEFONO', 'TELÉFONO'], document.getElementById('telefono').value);
+            llenarCampoSeguro(form, ['CORREO ELECTRÓNICO', 'CORREO ELECTRONICO'], document.getElementById('email').value);
+            llenarCampoSeguro(form, ['CLABE', 'CUENTA CLABE'], document.getElementById('clabe').value);
+            llenarCampoSeguro(form, ['BANCO'], document.getElementById('banco').value);
+            llenarCampoSeguro(form, ['PUESTO'], document.getElementById('puesto').value);
+            llenarCampoSeguro(form, ['CENTRO', 'CENTRO DE TRABAJO'], document.getElementById('centro').value);
+            llenarCampoSeguro(form, ['TURNO'], document.getElementById('turno').value);
+            llenarCampoSeguro(form, ['SUELDO NETO QUINCENAL', 'SUELDO'], document.getElementById('sueldo').value);
+            llenarCampoSeguro(form, ['DEDUCCIONES QUINCENALES', 'DEDUCCIONES'], document.getElementById('deducciones').value);
             
-            // Datos del Préstamo (Textos)
-            llenarCampoSeguro(form, ['MONTO SOLICITADO', 'MONTO'], document.getElementById('monto').value, false);
+            // Datos del Préstamo
+            llenarCampoSeguro(form, ['MONTO SOLICITADO', 'MONTO'], document.getElementById('monto').value);
             
-            // Plazo asignado como campo de texto
-            llenarCampoSeguro(form, ['CORTO PLAZO LARGO PLAZO', 'CORTO PLAZO / LARGO PLAZO'], tipoPrestamoGlobal, false);
+            // Plazo (Corto / Largo Plazo)
+            llenarCampoSeguro(form, ['PLAZO', 'CORTO PLAZO / LARGO PLAZO', 'CORTO PLAZO LARGO PLAZO', 'TIPO PRESTAMO'], tipoPrestamoGlobal);
             
-            llenarCampoSeguro(form, ['QUINCENAS'], document.getElementById('quincenas').value, false);
-            llenarCampoSeguro(form, ['FECHA DE SOLICITUD', 'FECHA'], document.getElementById('fecha').value, false);
-            llenarCampoSeguro(form, ['CANTIDAD CON LETRA'], document.getElementById('cantidad_letra').value, false);
+            llenarCampoSeguro(form, ['QUINCENAS'], document.getElementById('quincenas').value);
+            llenarCampoSeguro(form, ['FECHA DE SOLICITUD', 'FECHA'], document.getElementById('fecha').value);
+            
+            // Cantidad con letra (cubre múltiples nombres posibles en el PDF)
+            llenarCampoSeguro(form, ['CANTIDAD CON LETRA', 'CANTIDAD_LETRA', 'LETRAS', 'MONTO LETRA'], document.getElementById('cantidad_letra').value);
 
             const nombreCompleto = `${document.getElementById('nombres').value} ${document.getElementById('ap_paterno').value} ${document.getElementById('ap_materno').value}`.trim();
-            llenarCampoSeguro(form, ['NOMBRE Y FIRMA DEL SOLICITANTE', 'FIRMA'], nombreCompleto, false);
+            llenarCampoSeguro(form, ['NOMBRE Y FIRMA DEL SOLICITANTE', 'FIRMA'], nombreCompleto);
 
-
-            // --- 2. LISTAS DESPLEGABLES (DROPDOWNS DE ADOBE PRO - esDropdown = true) ---
-            llenarCampoSeguro(form, ['CIUDAD'], document.getElementById('ciudad').value, true);
-            llenarCampoSeguro(form, ['CENTRO', 'CENTRO DE TRABAJO'], document.getElementById('centro').value, true);
-            llenarCampoSeguro(form, ['TURNO'], document.getElementById('turno').value, true);
-
-            // Aplastar formulario para fijar los textos y evitar su edición futura
             form.flatten();
 
             const pdfModificadoBytes = await pdfDoc.save();
@@ -228,7 +288,12 @@ async function procesarPDF(esBlanco = false) {
             
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `Prestamo Sindical XCEE - ${nombreCompleto}.pdf`;
+            
+            const nombreArchivo = nombreCompleto !== "" 
+                ? `Prestamo Sindical XCEE - ${nombreCompleto.toUpperCase()}.pdf` 
+                : 'Prestamo Sindical XCEE - Solicitud Llena.pdf';
+            
+            link.download = nombreArchivo;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -243,5 +308,5 @@ async function procesarPDF(esBlanco = false) {
     }
 }
 
-// Iniciar aplicación web
+// Iniciar aplicación web al cargar
 updatePrestamo();

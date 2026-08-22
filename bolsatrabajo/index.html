@@ -5,12 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bolsa de Trabajo SUTCBEBCS</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .form-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+        .form-table th, .form-table td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        .form-table th { background-color: var(--primary); color: white; text-align: center; }
+        .tbl-input { width: 100%; padding: 6px; font-size: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .center-chk { text-align: center; }
+        .center-chk input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+        .checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; align-items: center; }
+        .chk-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .chk-item input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; }
+    </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="top-bar">
-        <button id="btn-print-blank" type="button" class="btn btn-secondary">
+        <button id="btn-print-blank" type="button" class="btn btn-secondary" onclick="procesarPDF(true)">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"></path></svg>
             Descargar formato en blanco
         </button>
@@ -22,79 +33,88 @@
             <h1>Sindicato Único de Trabajadores del Colegio de Bachilleres <br> del Estado de Baja California Sur</h1>
             <h2>X COMITÉ EJECUTIVO ESTATAL</h2>
         </div>
-
+        
         <div class="section-title-main">SOLICITUD DE INGRESO A LA BOLSA DE TRABAJO SINDICAL 2026</div>
         <div style="text-align: center; margin-bottom: 10px; font-weight: bold; color: var(--primary);">Formato de apertura y/o actualización</div>
-
+        
+        <!-- Fecha de Solicitud -->
         <div class="section">
             <div class="section-title">FECHA DE SOLICITUD</div>
             <div class="section-body" style="display: flex; justify-content: center;">
                 <div class="field" style="width: 250px; text-align: center;">
-                    <input type="text" id="fecha_solicitud" style="text-align: center;" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
+                    <input type="text" id="fecha" style="text-align: center;" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'">
                 </div>
             </div>
         </div>
 
+        <!-- 1. Datos del Trabajador -->
         <div class="section">
             <div class="section-title">1. DATOS DEL TRABAJADOR (A) SINDICALIZADO (A)</div>
             <div class="section-body grid">
-                <!-- Se captura primero Paterno, Materno y luego Nombres -->
-                <div class="field col-span-4"><label>APELLIDO PATERNO</label><input type="text" id="ap_paterno_trabajador"></div>
-                <div class="field col-span-4"><label>APELLIDO MATERNO</label><input type="text" id="ap_materno_trabajador"></div>
-                <div class="field col-span-4"><label>NOMBRE (S)</label><input type="text" id="nombres_trabajador"></div>
+                <div class="field col-span-4"><label>APELLIDO PATERNO</label><input type="text" id="ap_paterno"></div>
+                <div class="field col-span-4"><label>APELLIDO MATERNO</label><input type="text" id="ap_materno"></div>
+                <div class="field col-span-4"><label>NOMBRE (S)</label><input type="text" id="nombres"></div>
 
                 <div class="field col-span-4"><label>CENTRO DE ADSCRIPCIÓN</label>
-                    <select id="centro_trabajador">
+                    <select id="centro">
                         <option value=""></option>
-                        <option value="DG">DIRECCIÓN GENERAL</option>
-                        <option value="SEA">S.E.A. 01</option>
-                        <option value="ALMACEN">ALMACÉN</option>
-                        <option value="PLANTEL01">PLANTEL 01</option>
-                        <option value="PLANTEL02">PLANTEL 02</option>
-                        <option value="PLANTEL03">PLANTEL 03</option>
-                        <option value="PLANTEL04">PLANTEL 04</option>
-                        <option value="PLANTEL05">PLANTEL 05</option>
-                        <option value="PLANTEL06">PLANTEL 06</option>
-                        <option value="PLANTEL07">PLANTEL 07</option>
-                        <option value="PLANTEL08">PLANTEL 08</option>
-                        <option value="PLANTEL09">PLANTEL 09</option>
-                        <option value="PLANTEL10">PLANTEL 10</option>
-                        <option value="PLANTEL11">PLANTEL 11</option>
+                        <option value="DIRECCIÓN GENERAL">DIRECCIÓN GENERAL</option>
+                        <option value="S.E.A. 01">S.E.A. 01</option>
+                        <option value="ALMACÉN">ALMACÉN</option>
+                        <option value="PLANTEL 01">PLANTEL 01</option>
+                        <option value="PLANTEL 02">PLANTEL 02</option>
+                        <option value="PLANTEL 03">PLANTEL 03</option>
+                        <option value="PLANTEL 04">PLANTEL 04</option>
+                        <option value="PLANTEL 05">PLANTEL 05</option>
+                        <option value="PLANTEL 06">PLANTEL 06</option>
+                        <option value="PLANTEL 07">PLANTEL 07</option>
+                        <option value="PLANTEL 08">PLANTEL 08</option>
+                        <option value="PLANTEL 09">PLANTEL 09</option>
+                        <option value="PLANTEL 10">PLANTEL 10</option>
+                        <option value="PLANTEL 11">PLANTEL 11</option>
                     </select>
                 </div>
-                <div class="field col-span-4"><label>TELÉFONO DEL TRABAJADOR</label><input type="text" id="tel_trabajador" placeholder="10 dígitos"></div>
-                <div class="field col-span-4"><label>CORREO ELECTRÓNICO</label><input type="email" id="correo_trabajador"></div>
+                <div class="field col-span-4"><label>TELÉFONO DEL TRABAJADOR</label><input type="text" id="telefono1" placeholder="10 dígitos"></div>
+                <div class="field col-span-4"><label>CORREO ELECTRÓNICO</label><input type="email" id="correo1"></div>
             </div>
         </div>
 
+ <!-- 2. Relación de Parentesco -->
+
         <div class="section">
+
             <div class="section-title">2. RELACIÓN DEL TRABAJADOR Y SU FAMILIAR RECOMENDADO</div>
+
             <div class="section-body">
                 <label style="font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: block;">PARENTESCO DEL RECOMENDADO</label>
                 <div class="checkbox-group">
-                    <label class="chk-item"><input type="radio" name="parentesco"> Cónyuge</label>
-                    <label class="chk-item"><input type="radio" name="parentesco"> Concubino(a)</label>
-                    <label class="chk-item"><input type="radio" name="parentesco"> Hijo(a)</label>
-                    <label class="chk-item"><input type="radio" name="parentesco"> Hermano (a)</label>
-                    <label class="chk-item"><input type="radio" name="parentesco"> Nieto (a)</label>
-                    <label class="chk-item"><input type="radio" name="parentesco"> Sobrino (a)</label>
-                    <label class="chk-item" style="flex: 1;"><input type="radio" name="parentesco"> Otro: <input type="text" style="flex: 1; border: none; border-bottom: 1px solid #ccc; background: transparent; outline: none; padding: 2px 5px;"></label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Cónyuge"> Cónyuge</label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Concubino(a)"> Concubino(a)</label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Hijo(a)"> Hijo(a)</label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Hermano(a)"> Hermano (a)</label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Nieto(a)"> Nieto (a)</label>
+                    <label class="chk-item"><input type="radio" name="parentesco" value="Sobrino(a)"> Sobrino (a)</label>
+                    <!-- Fila de "Otro" con input al lado expandido -->
+                    <div class="chk-row" style="width: 100%; display: flex; align-items: center;">
+                        <label class="chk-item" style="white-space: nowrap;"><input type="radio" name="parentesco" value="Otro" id="radio_otro"> Otro:</label>
+                        <input type="text" id="otro_parentesco" disabled class="readonly" style="flex: 1; border: none; border-bottom: 1px solid #ccc; background: transparent; outline: none; padding: 4px 8px; font-size: 13px; margin-left: 5px;">
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- 3. Datos del Familiar Recomendado -->
         <div class="section">
             <div class="section-title">3. DATOS DEL FAMILIAR RECOMENDADO</div>
             <div class="section-body grid">
-                <!-- Se captura primero Paterno, Materno y luego Nombres -->
-                <div class="field col-span-4"><label>APELLIDO PATERNO</label><input type="text" id="ap_paterno_fam"></div>
-                <div class="field col-span-4"><label>APELLIDO MATERNO</label><input type="text" id="ap_materno_fam"></div>
-                <div class="field col-span-4"><label>NOMBRE (S)</label><input type="text" id="nombres_fam"></div>
+                <div class="field col-span-4"><label>APELLIDO PATERNO</label><input type="text" id="fam_ap_paterno"></div>
+                <div class="field col-span-4"><label>APELLIDO MATERNO</label><input type="text" id="fam_ap_materno"></div>
+                <div class="field col-span-4"><label>NOMBRE (S)</label><input type="text" id="fam_nombres"></div>
+                                
+                <div class="field col-span-4"><label>FECHA DE NACIMIENTO</label><input type="text" id="fam_fecha_nac" style="text-align: center;" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'"></div>
+                <div class="field col-span-4"><label>NO. DE TELÉFONO</label><input type="text" id="telefono2" placeholder="10 dígitos"></div>
+                <div class="field col-span-4"><label>CORREO</label><input type="email" id="correo2"></div>
                 
-                <div class="field col-span-4"><label>FECHA DE NACIMIENTO</label><input type="text" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'"></div>
-                <div class="field col-span-4"><label>NO. DE TELÉFONO</label><input type="text" id="tel_fam" placeholder="10 dígitos"></div>
-                <div class="field col-span-4"><label>CORREO</label><input type="email" id="correo_fam"></div>
-
                 <div class="col-span-12">
                     <table class="form-table">
                         <thead>
@@ -106,106 +126,67 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Secundaria</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Carrera comercial o técnica</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Bachillerato</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Nivelación Pedagógica</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Técnico Superior Universitario</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Licenciatura</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Ingeniería</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Maestría</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
-                            <tr>
-                                <td>Doctorado</td>
-                                <td class="center-chk"><input type="checkbox"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                                <td><input type="text" class="tbl-input"></td>
-                            </tr>
+                            <tr><td>Secundaria</td><td class="center-chk"><input type="checkbox" id="cb_1"></td><td><input type="text" id="doc_1" class="tbl-input"></td><td><input type="text" id="perfil_1" class="tbl-input"></td></tr>
+                            <tr><td>Carrera comercial o técnica</td><td class="center-chk"><input type="checkbox" id="cb_2"></td><td><input type="text" id="doc_2" class="tbl-input"></td><td><input type="text" id="perfil_2" class="tbl-input"></td></tr>
+                            <tr><td>Bachillerato</td><td class="center-chk"><input type="checkbox" id="cb_3"></td><td><input type="text" id="doc_3" class="tbl-input"></td><td><input type="text" id="perfil_3" class="tbl-input"></td></tr>
+                            <tr><td>Nivelación Pedagógica</td><td class="center-chk"><input type="checkbox" id="cb_4"></td><td><input type="text" id="doc_4" class="tbl-input"></td><td><input type="text" id="perfil_4" class="tbl-input"></td></tr>
+                            <tr><td>Técnico Superior Universitario</td><td class="center-chk"><input type="checkbox" id="cb_5"></td><td><input type="text" id="doc_5" class="tbl-input"></td><td><input type="text" id="perfil_5" class="tbl-input"></td></tr>
+                            <tr><td>Licenciatura</td><td class="center-chk"><input type="checkbox" id="cb_6"></td><td><input type="text" id="doc_6" class="tbl-input"></td><td><input type="text" id="perfil_6" class="tbl-input"></td></tr>
+                            <tr><td>Ingeniería</td><td class="center-chk"><input type="checkbox" id="cb_7"></td><td><input type="text" id="doc_7" class="tbl-input"></td><td><input type="text" id="perfil_7" class="tbl-input"></td></tr>
+                            <tr><td>Maestría</td><td class="center-chk"><input type="checkbox" id="cb_8"></td><td><input type="text" id="doc_8" class="tbl-input"></td><td><input type="text" id="perfil_8" class="tbl-input"></td></tr>
+                            <tr><td>Doctorado</td><td class="center-chk"><input type="checkbox" id="cb_9"></td><td><input type="text" id="doc_9" class="tbl-input"></td><td><input type="text" id="perfil_9" class="tbl-input"></td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
 
+        <!-- 4. Ciudades o Localidades -->
         <div class="section">
             <div class="section-title">4. SEÑALA EN QUÉ CIUDADES O LOCALIDADES ESTARÍAS DISPUESTO A LABORAR</div>
             <div class="section-body">
                 <div class="checkbox-group" style="justify-content: space-between;">
-                    <label class="chk-item"><input type="checkbox"> Guerrero Negro</label>
-                    <label class="chk-item"><input type="checkbox"> Santa Rosalía</label>
-                    <label class="chk-item"><input type="checkbox"> Loreto</label>
-                    <label class="chk-item"><input type="checkbox"> Cd. Constitución</label>
-                    <label class="chk-item"><input type="checkbox"> La Paz</label>
-                    <label class="chk-item"><input type="checkbox"> San José del Cabo</label>
-                    <label class="chk-item"><input type="checkbox"> Cabo San Lucas</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_1"> Guerrero Negro</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_2"> Santa Rosalía</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_3"> Loreto</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_4"> Cd. Constitución</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_5"> La Paz</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_6"> San José del Cabo</label>
+                    <label class="chk-item"><input type="checkbox" id="cc_7"> Cabo San Lucas</label>
                 </div>
             </div>
         </div>
 
+        <!-- Importante -->
         <div class="section">
             <div class="section-title" style="background: var(--text);">IMPORTANTE:</div>
-            <div class="section-body legal-text">
+            <div class="section-body legal-text" style="font-size: 13px; line-height: 1.5;">
                 <p><strong>a)</strong> Este formato deberá imprimirse, llenarse y firmarse utilizando pluma con tinta de color azul, escanearlo adjuntando la documentación probatoria de los datos aquí vertidos y entregar vía electrónica al siguiente correo: <strong>sindicato.bolsatrabajo@gmail.com</strong></p>
                 <p><strong>b)</strong> La hoja de servicio que contempla el factor antigüedad del trabajador, solo en caso de ser necesario será requerida al Colegio. (casos de empate, etc.)</p>
             </div>
         </div>
 
-        <div class="firma-container" style="margin-top: 30px;">
+        <!-- Firma -->
+        <div class="firma-container" style="margin-top: 30px; text-align: center;">
             <div id="nombre_firma_print" style="text-transform: uppercase; margin-bottom: 2px; font-size: 14px; font-weight: bold; min-height: 20px;"></div>
-            <div class="firma-line">
+            <div class="firma-line" style="border-top: 1px solid #333; width: 60%; margin: 0 auto; padding-top: 5px; font-weight: bold; font-size: 12px;">
                 NOMBRE Y FIRMA DEL TRABAJADOR (A) SINDICALIZADO (A)
             </div>
-            <div class="form-id">F2026-XCE</div>
+            <div class="form-id" style="font-size: 11px; color: #775; margin-top: 5px;">F2026-XCE</div>
         </div>
     </div>
 
     <div class="bottom-bar">
-        <button id="btn-print-filled" type="button" class="btn">
+        <button id="btn-print-filled" type="button" class="btn" onclick="procesarPDF(false)">
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-            Descargar / Guardar como PDF
+            Descargar Solicitud Llenada (PDF)
         </button>
     </div>
 </div>
 
+<!-- LIBRERÍAS PDF-LIB PARA EL LLENADO DINÁMICO -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://unpkg.com/@pdf-lib/fontkit/dist/fontkit.umd.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

@@ -93,10 +93,10 @@
                 </div>
                 
                 <div class="field col-span-6">
-                    <label>PLAZO EN QUINCENAS: <span id="quincenas_val" style="font-size: 16px; color: var(--primary);">12</span></label>
-                    <div class="slider-wrapper">
-                        <input type="range" id="quincenas" min="1" max="12" value="12" step="1">
-                        <span id="tipo_prestamo_display" class="status-badge status-corto">Corto Plazo</span>
+                    <label>PLAZO EN QUINCENAS: <span id="quincenas_val" style="font-size: 15px; color: var(--primary); font-weight: bold;">12</span></label>
+                    <div class="slider-wrapper" style="display: flex; align-items: center; gap: 12px; padding: 0 12px; border: 1px solid #ccc; border-radius: 4px; background: rgba(255,255,255,0.9); height: 42px; box-sizing: border-box;">
+                        <input type="range" id="quincenas" min="1" max="12" value="12" step="1" style="flex: 1; margin: 0; cursor: pointer;">
+                        <span id="tipo_prestamo_display" class="status-badge status-corto" style="white-space: nowrap; font-size: 12px; padding: 4px 10px;">Corto Plazo</span>
                     </div>
                 </div>
 
@@ -110,6 +110,51 @@
                     <input type="text" id="cantidad_letra" readonly class="readonly">
                     <div id="monto_warning" class="warning" style="display:none;"></div>
                 </div>
+
+                <div class="field col-span-12">
+                    <label>CANTIDAD CON LETRA</label>
+                    <input type="text" id="cantidad_letra" readonly class="readonly">
+                    <div id="monto_warning" class="warning" style="display:none;"></div>
+                </div>
+
+                <!-- Resumen Financiero Pro (Cálculo Automático) -->
+                <div class="field col-span-12" style="margin-top: 5px;">
+                    <label style="font-size: 12px; font-weight: 700; color: var(--primary-dark); margin-bottom: 6px; display: block;">Resumen Financiero del Préstamo</label>
+                    <div style="background: linear-gradient(135deg, #fdfbf7 0%, #f4f0ef 100%); border: 1px solid #e2dad6; border-radius: 8px; padding: 15px 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: center;">
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase;">Pago Quincenal Estimado</span>
+                            <span id="pago_quincenal" style="font-size: 18px; font-weight: bold; color: var(--primary);">$0.00</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase;">Interés Total (1% Quincenal)</span>
+                            <span id="interes_total" style="font-size: 15px; font-weight: 600; color: #555;">$0.00</span>
+                        </div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span style="font-size: 11px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase;">Total a Pagar con Interés</span>
+                            <span id="total_pagar" style="font-size: 18px; font-weight: bold; color: #2c3e50;">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="section">
+            <div class="section-title">CONDICIONES SEGÚN LO DISPUESTO EN EL CAPÍTULO V DEL REGLAMENTO <br> DE OPERACIÓN DEL FONDO PARA EL RETIRO Y DE PRÉSTAMOS VIGENTE</div>
+            <div class="section-body legal-text">
+                <p><strong>ARTÍCULO 18. Tipos de préstamos:</strong></p>
+                <p>a) a corto plazo: Aquellos hasta por un monto de $10,000.00 (diez mil pesos 00/100 M.N.) pagaderos hasta en 6 meses (hasta 12 quincenas).</p>
+                <p>b) a largo plazo: Aquellos mayores a $10,000.00 (diez mil pesos 00/100 M.N.) y hasta por un monto máximo de $20,000.00 (veinte mil pesos 00/100 M.N.) pagaderos hasta en 12 meses (hasta 24 quincenas).</p>
+                <p><strong>ARTÍCULO 20.</strong> El trabajador sindicalizado que requiera de algún préstamo deberá presentar su solicitud por escrito (llenar el formato de solicitud de préstamo) y cumplir con los siguientes requisitos:</p>
+                <p>a) Ser trabajador sindicalizado;<br>
+                b) Tener un mínimo de seis meses de antigüedad como miembro del sindicato;<br>
+                c) Tener cubierto por lo menos el 50% del préstamo actual y el saldo de éste, será descontado automáticamente del nuevo préstamo.<br>
+                d) Entregar copia del comprobante de pago.<br>
+                e) Que el descuento en ningún caso sobrepase el 30% de su sueldo neto.</p>
+                <p><strong>ARTÍCULO 21.</strong> Los préstamos estarán sujetos a que exista disponibilidad en el fondo de préstamos.</p>
+                <!--  
+                    <p><strong>NOTA:</strong> Los préstamos se depositarán el día viernes de cada semana. <br>
+                    Solo se recibirán solicitudes a través del correo electrónico: <strong>prestamos.sutcbebcs@gmail.com </strong>o en su defecto solicitudes de forma presencial.
+                    </p> 
+                -->
             </div>
         </div>
     </div>

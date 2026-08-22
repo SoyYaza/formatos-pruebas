@@ -11,7 +11,7 @@
 body {
     background-color: var(--bg-color);
     font-family: 'Segoe UI', system-ui, sans-serif;
-    margin: 0; padding: 20px 0; color: var(--text);
+    margin: 0; padding: 20px 10px; color: var(--text);
 }
 .app-container {
     max-width: 900px; margin: 0 auto;
@@ -26,187 +26,46 @@ body {
     transition: background 0.3s;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     display: inline-flex; align-items: center; gap: 8px;
+    width: 100%; justify-content: center;
 }
+@media(min-width: 768px) { .btn { width: auto; } }
 .btn:hover { background-color: var(--primary-dark); }
 .btn-secondary {
     background-color: var(--surface); color: var(--primary);
     border: 2px solid var(--primary); box-shadow: none;
 }
-.btn-secondary:hover {
-    background-color: var(--primary); color: white;
-}
-/* === LOGO SUPERIOR IZQUIERDO === */
-.logo-institucional {
-    position: absolute;
-    top: 0;
-    left: 20px;
-    width: 75px; /* Tamaño ideal y proporcionado para pantalla */
-    z-index: 2;
-}
+.btn-secondary:hover { background-color: var(--primary); color: white; }
 
-/* === CONFIGURACIÓN DE LA HOJA Y MARCA DE AGUA (PANTALLA) === */
-.sheet {
-    position: relative;
-    padding: 0;
-    border-radius: 0;
-}
+.logo-institucional { position: absolute; top: 0; left: 0; width: 75px; z-index: 2; }
+.sheet { position: relative; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
 .sheet::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
     background: url('logo.svg') no-repeat center center;
-    background-size: 65%; 
-    opacity: 0.08; 
-    pointer-events: none;
-    z-index: 10;
-}
-.header, .section, .firma-container {
-    position: relative;
-    z-index: 1;
+    background-size: 65%; opacity: 0.05; pointer-events: none; z-index: 0;
 }
 
-/* ================================================ */
-.header {
-    text-align: center; border-bottom: 3px solid var(--primary);
-    padding-bottom: 15px; margin-bottom: 25px;
+.header { text-align: center; border-bottom: 3px solid var(--primary); padding-bottom: 15px; margin-bottom: 25px; position: relative; z-index: 1;}
+.header h1 { font-size: 20px; margin: 0 0 5px 0; }
+.header h2 { color: var(--primary); font-size: 16px; margin: 0 0 5px 0; font-weight: bold; }
+@media(min-width: 768px) { .header h1 { font-size: 24px; } .header h2 { font-size: 18px; } }
+
+.section { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 25px; overflow: hidden; position: relative; z-index: 1;}
+.section-title { background: var(--primary); color: white; padding: 10px 15px; font-weight: 600; font-size: 15px; text-align: center; }
+.section-title-main { color: var(--primary); padding: 10px 15px; font-size: 18px; text-align: center; font-weight: bold; position: relative; z-index: 1;}
+.section-body { padding: 20px; background: rgba(250, 249, 249, 0.85); }
+
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px; }
+.field { display: flex; flex-direction: column; grid-column: span 12; }
+@media(min-width: 768px) {
+    .col-span-12 { grid-column: span 12; }
+    .col-span-8 { grid-column: span 8; }
+    .col-span-6 { grid-column: span 6; }
+    .col-span-4 { grid-column: span 4; }
+    .col-span-3 { grid-column: span 3; }
+    .col-span-2 { grid-column: span 2; }
 }
-.header h1 { font-size: 24px; margin: 0 0 5px 0; }
-.header h2 { color: var(--primary); font-size: 18px; margin: 0 0 5px 0; font-weight: 400; font-weight: bold; }
-.section {
-    border: 1px solid var(--border); border-radius: 8px;
-    margin-bottom: 25px; overflow: hidden;
-}
-.section-title {
-    background: var(--primary); color: white;
-    padding: 10px 15px; font-weight: 600; font-size: 15px;
-    text-align: center;
-}
-.section-title-main {
-    color: var(--primary);
-    padding: 10px 10px 5px 10px; font-weight: 600; font-size: 18px; text-align: center; font-weight: bold;
-}
-.section-body {
-    padding: 20px; background: rgba(250, 249, 249, 0.85); 
-}
-.grid {
-    display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px;
-}
-.field {
-    display: flex; flex-direction: column;
-}
-.col-span-12 { grid-column: span 12; }
-.col-span-8 { grid-column: span 8; }
-.col-span-6 { grid-column: span 6; }
-.col-span-4 { grid-column: span 4; }
-.col-span-3 { grid-column: span 3; }
-.col-span-2 { grid-column: span 2; }
-.field label {
-    font-size: 12px; font-weight: 700; margin-bottom: 5px;
-    color: var(--primary-dark); text-transform: uppercase;
-}
-.field input, .field select {
-    padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;
-    background: rgba(255, 255, 255, 0.9); transition: border-color 0.2s;
-}
-.field input:focus, .field select:focus {
-    outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(169, 52, 27, 0.15);
-}
+
+.field label { font-size: 12px; font-weight: 700; margin-bottom: 5px; color: var(--primary-dark); text-transform: uppercase; }
+.field input, .field select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; background: rgba(255, 255, 255, 0.9); box-sizing: border-box; width: 100%; }
+.field input:focus, .field select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(169, 52, 27, 0.15); }
 .readonly { background-color: rgba(238, 238, 238, 0.8) !important; cursor: not-allowed; }
-
-.legal-text {
-    font-size: 12px; color: #444; line-height: 1.5; text-align: justify;
-}
-.legal-text p { margin: 0 0 10px 0; }
-.legal-text p:last-child { margin: 0; }
-.firma-container {
-    text-align: center; margin-top: 60px;
-}
-.firma-line {
-    border-top: 2px solid var(--text); width: 400px; margin: 0 auto;
-    padding-top: 10px; font-weight: bold;
-}
-.form-id {
-    text-align: right; font-size: 10px; color: #888; margin-top: 20px;
-}
-
-/* === ELEMENTOS NUEVOS: TABLAS Y CHECKBOXES === */
-.form-table { width: 100%; border-collapse: collapse; margin-top: 5px; background: rgba(255, 255, 255, 0.9); }
-.form-table th { background: #e0e0e0; color: var(--primary-dark); padding: 8px; font-size: 11px; text-transform: uppercase; border: 1px solid #ccc; text-align: center; }
-.form-table td { border: 1px solid #ccc; padding: 4px 8px; font-size: 13px; vertical-align: middle; }
-.form-table .tbl-input { width: 100%; border: none; background: transparent; padding: 4px; font-size: 13px; outline: none; }
-.form-table .tbl-input:focus { border-bottom: 2px solid var(--primary); }
-.center-chk { text-align: center; }
-
-.checkbox-group { display: flex; flex-wrap: wrap; gap: 15px; }
-.chk-item { display: flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: #444; cursor: pointer; }
-.chk-item input[type="checkbox"], .chk-item input[type="radio"] { accent-color: var(--primary); width: 16px; height: 16px; cursor: pointer; }
-
-/* === RESPONSIVO PARA CELULARES Y PANTALLAS PEQUEÑAS (EXCLUYE IMPRESIÓN) === */
-@media screen and (max-width: 768px) {
-    body { padding: 10px; }
-    .app-container { max-width: 100%; padding: 0; }
-    .sheet { padding: 15px; }
-    .grid { display: flex; flex-direction: column; gap: 12px; }
-    .field { width: 100% !important; }
-    .top-bar, .bottom-bar { padding: 0 10px; }
-    .btn { width: 100%; justify-content: center; }
-    .firma-line { width: 280px; }
-}
-
-/* === MODO IMPRESIÓN / PDF (TAMAÑO CARTA - 1 SOLA HOJA) === */
-@media print {
-    @page { size: letter; margin: 10mm; } 
-    body { background-color: white; padding: 0; margin: 0; height: 100%; }
-    .top-bar, .bottom-bar { display: none !important; }
-    .app-container { max-width: 100%; margin: 0; }
-    
-    .sheet { 
-        padding: 0; box-shadow: none; border-radius: 0; 
-        display: flex; flex-direction: column; height: 98vh; 
-        overflow: hidden; box-sizing: border-box;
-    }
-    .sheet::before {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-        opacity: 0.1 !important; 
-        background-size: 70%; 
-    }
-
-    .header { padding-bottom: 5px; margin-bottom: 5px; border-bottom: 2px solid black; }
-    .header h1 { font-size: 12pt; color: black !important; margin-bottom: 2px;}
-    .header h2 { font-size: 10pt; color: black !important; margin-bottom: 2px;}
-
-    .section { border: 1px solid black; margin-bottom: 6px; border-radius: 0; page-break-inside: avoid; }
-    .section-title, .section-title-main {
-        background: #e0e0e0 !important; color: black !important;
-        padding: 2px 8px; font-size: 8pt; font-weight: bold;
-        -webkit-print-color-adjust: exact; print-color-adjust: exact;
-        border-bottom: 1px solid black;
-    }
-    .section-title-main { text-align: center; font-size: 9pt; padding: 4px; margin-bottom: 2px; }
-    .section-body { padding: 6px; background: transparent !important; }
-    
-    .grid { gap: 4px 6px; }
-    .field label { font-size: 7pt; color: black !important; margin-bottom: 1px; }
-    .field input, .field select {
-        padding: 1px; border: none; border-bottom: 1px solid black;
-        border-radius: 0; font-size: 8pt; height: auto;
-        background: transparent !important; color: black !important;
-        -webkit-appearance: none; -moz-appearance: none; appearance: none;
-    }
-    input::placeholder { color: transparent; }
-    
-    /* Tablas y check en impresión */
-    .form-table th { background: #e0e0e0 !important; color: black !important; font-size: 7pt; padding: 2px; border: 1px solid black; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .form-table td { border: 1px solid black; padding: 1px 2px; }
-    .form-table .tbl-input { border: none; font-size: 7.5pt; }
-    .chk-item { font-size: 7.5pt; color: black !important; margin-bottom: 0; }
-    .chk-item input[type="checkbox"], .chk-item input[type="radio"] { width: 10px; height: 10px; border: 1px solid black; margin-right: 2px; }
-    
-    .legal-text { font-size: 7.5pt; line-height: 1.1; padding: 4px 6px; }
-    .legal-text p { margin: 0 0 2px 0; }
-    
-    .firma-container { margin-top: auto; padding-top: 10px; page-break-inside: avoid; }
-    .firma-line { width: 280px; font-size: 8pt; border-top: 1px solid black; padding-top: 4px; }
-    .form-id { font-size: 6pt; margin-top: 2px; color: black !important; }
-}
