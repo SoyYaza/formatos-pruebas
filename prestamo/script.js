@@ -152,19 +152,27 @@ async function procesarPDF(esBlanco = false) {
     else btnLleno.innerHTML = '⏳ Generando...';
 
     try {
-        // 1. Descargamos la plantilla base desde el servidor
-        const urlPlantilla = 'BasePrestamo.pdf';
-        const pdfBytesArray = await fetch(urlPlantilla).then(res => res.arrayBuffer());
+        if (esBlanco) {
+            // === RUTA 1: DESCARGA DIRECTA (MÁS RÁPIDA) ===
+            // Solo se ejecuta cuando bajan el formato en blanco
+            const link = document.createElement('a');
+            link.href = 'BasePrestamo.pdf'; 
+            link.download = 'Solicitud_SUTCBEBCS_Blanco.pdf'; 
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+        } else {
+            // === RUTA 2: MOTOR PDF-LIB (INYECCIÓN DE DATOS) ===
+            // Se ejecuta cuando quieren descargar la solicitud llenada
+            const urlPlantilla = 'BasePrestamo.pdf';
+            const pdfBytesArray = await fetch(urlPlantilla).then(res => res.arrayBuffer());
+            const pdfDoc = await PDFLib.PDFDocument.load(pdfBytesArray);
+            
+            pdfDoc.registerFontkit(window.fontkit);
+            const form = pdfDoc.getForm();
 
-        // 2. Cargamos el documento con la librería PDF-Lib
-        const pdfDoc = await PDFLib.PDFDocument.load(pdfBytesArray);
-        
-        // Inicializar fontkit para manejo nativo de fuentes del PDF
-        pdfDoc.registerFontkit(window.fontkit);
-        const form = pdfDoc.getForm();
-
-        // 3. Mapeamos los datos de la web con los campos EXACTOS de la plantilla PDF (vistos en Foxit)
-        if (!esBlanco) {
+            // Mapeo de campos
             llenarCampoSeguro(form, 'APELLIDO PATERNO', document.getElementById('ap_paterno').value);
             llenarCampoSeguro(form, 'APELLIDO MATERNO', document.getElementById('ap_materno').value);
             llenarCampoSeguro(form, 'NOMBRE S', document.getElementById('nombres').value);
@@ -190,25 +198,25 @@ async function procesarPDF(esBlanco = false) {
             // Nombre de Firma Combinado
             const nombreCompleto = `${document.getElementById('nombres').value} ${document.getElementById('ap_paterno').value} ${document.getElementById('ap_materno').value}`.trim();
             llenarCampoSeguro(form, 'NOMBRE Y FIRMA DEL SOLICITANTE', nombreCompleto);
+
+            // Aplastamos el PDF para que el texto sea no editable
+            form.flatten();
+
+            // Generamos y descargamos el archivo lleno
+            const pdfModificadoBytes = await pdfDoc.save();
+            const blob = new Blob([pdfModificadoBytes], { type: 'application/pdf' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'Solicitud_SUTCBEBCS_Llena.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
-        // 4. Aplastamos el PDF para que el texto sea no editable, asegurando su integridad institucional
-        form.flatten();
-
-        // 5. Generamos el archivo PDF y lanzamos la descarga directa
-        const pdfModificadoBytes = await pdfDoc.save();
-        const blob = new Blob([pdfModificadoBytes], { type: 'application/pdf' });
-        
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = esBlanco ? 'Solicitud_SUTCBEBCS_Blanco.pdf' : 'Solicitud_SUTCBEBCS_Llena.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
     } catch (error) {
-        console.error('Error al generar el PDF:', error);
-        alert("Ocurrió un error al generar el PDF. Verifica que el archivo 'BasePrestamo.pdf' se encuentre subido en la misma carpeta del servidor.");
+        console.error('Error al procesar/descargar el PDF:', error);
+        alert("Ocurrió un error. Verifica que el archivo 'BasePrestamo.pdf' se encuentre subido en la misma carpeta del servidor.");
     } finally {
         // Restaurar texto del botón original
         if(esBlanco) btnBlanco.innerHTML = textoOriginal;
