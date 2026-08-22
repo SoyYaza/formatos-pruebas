@@ -144,7 +144,7 @@ input[type=range] { flex: 1; accent-color: var(--primary); }
 
 /* === MODO IMPRESIÓN / PDF (TAMAÑO CARTA - 1 SOLA HOJA) === */
 @media print {
-    @page { size: letter; margin: 10mm } /* Márgenes reducidos para ganar espacio */
+    @page { size: letter; margin: 10mm; } /* Márgenes reducidos para ganar espacio */
     body { background-color: white; padding: 0; margin: 0; height: 100%; }
     .top-bar, .bottom-bar { display: none !important; }
     .app-container { max-width: 100%; margin: 0; }
@@ -246,5 +246,56 @@ input[type=range] { flex: 1; accent-color: var(--primary); }
     .btn { 
         width: 100%; 
         justify-content: center; 
+    }
+}
+/* --- CORRECCIONES VISUALES (Evitar textos rotos) --- */
+#tipo_prestamo_display, 
+.status-corto, 
+.status-largo {
+    white-space: nowrap; /* Fuerza a que "Corto Plazo" se mantenga en una sola línea */
+}
+
+input[type="text"], 
+input[type="number"], 
+.cantidad_letra {
+    box-sizing: border-box; /* Evita que el padding haga crecer el input fuera de su celda */
+    width: 100%;
+}
+
+/* --- REGLAS DE IMPRESIÓN (PDF en 1 sola hoja) --- */
+@media print {
+    /* Define estrictamente el tamaño de la hoja y elimina los márgenes automáticos del navegador */
+    @page {
+        size: letter portrait; /* Tamaño carta vertical */
+        margin: 5mm; /* Margen mínimo para aprovechar todo el espacio */
+    }
+
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background-color: white;
+        -webkit-print-color-adjust: exact !important; /* Fuerza a imprimir los colores de fondo e imágenes */
+        print-color-adjust: exact !important;
+    }
+
+    /* Aplica una reducción de escala ligera para asegurar que todo quepa en una hoja */
+    body {
+        zoom: 0.95; /* Reduce el tamaño al 95% al imprimir */
+    }
+
+    /* Evita que las tablas o los recuadros grises se partan a la mitad entre dos páginas */
+    table, 
+    .contenedor-principal, /* <- Cambia esto por la clase que envuelve a todo tu formato */
+    div[style*="border"] {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+
+    /* Oculta los botones al momento de crear el PDF */
+    #btn-print-filled, 
+    #btn-print-blank, 
+    button {
+        display: none !important;
     }
 }
