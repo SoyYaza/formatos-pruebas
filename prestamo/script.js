@@ -158,10 +158,10 @@ async function procesarPDF(esBlanco = false) {
         // 2. Determinamos qué archivo descargar según la opción elegida
         if (esBlanco) {
             link.href = 'BasePrestamo.pdf'; 
-            link.download = 'Solicitud_SUTCBEBCS_Blanco.pdf'; 
+            link.download = 'Solicitud_Prestamo_Blanco.pdf'; 
         } else {
             link.href = 'BasePrestamoLlenado.pdf'; 
-            link.download = 'Solicitud_SUTCBEBCS_Llena.pdf'; 
+            link.download = 'Solicitud_Prestamo_Lleno.pdf'; 
         }
         
         // 3. Lo agregamos al documento, simulamos el clic y lo eliminamos
