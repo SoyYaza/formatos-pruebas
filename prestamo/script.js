@@ -48,10 +48,20 @@ function updatePrestamo() {
         warning.style.display = 'none';
     }
 
+    // --- CÁLCULOS FINANCIEROS (Interés simple del 1% mensual) ---
+    // Como las quincenas se convierten a meses dividiendo entre 2 (o calculando sobre la base de 1% al mes)
+    let interesTotal = monto * 0.01 * (quincenas / 2);
+    let totalPagar = monto + interesTotal;
+    let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
+
+    // Mostrar en el panel visual
+    document.getElementById('pago_quincenal').textContent = '$' + pagoQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('interes_total').textContent = '$' + interesTotal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.getElementById('total_pagar').textContent = '$' + totalPagar.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+
     // Calcular y asignar la cantidad con letra en el formulario web
     const textoLetras = NumeroALetras(monto);
     cantidadLetra.value = textoLetras;
-    console.log("💰 Monto ingresado:", monto, "-> Letras generadas:", textoLetras);
 }
 
 montoInput.addEventListener('input', function() {
@@ -152,7 +162,6 @@ function llenarCampoSeguro(form, nombres, valor) {
                     const dropdown = form.getDropdown(field.getName());
                     if (dropdown) {
                         dropdown.select(valStr);
-                        console.log(`✅ Dropdown '${field.getName()}' seleccionado: "${valStr}"`);
                         return;
                     }
                 } catch (e1) {
@@ -160,7 +169,6 @@ function llenarCampoSeguro(form, nombres, valor) {
                         const campoTexto = form.getTextField(field.getName());
                         if (campoTexto) {
                             campoTexto.setText(valStr);
-                            console.log(`✅ Texto '${field.getName()}' llenado: "${valStr}"`);
                             return;
                         }
                     } catch (e2) {
@@ -168,7 +176,6 @@ function llenarCampoSeguro(form, nombres, valor) {
                             const radio = form.getRadioGroup(field.getName());
                             if (radio) {
                                 radio.select(valStr);
-                                console.log(`✅ Radio '${field.getName()}' seleccionado: "${valStr}"`);
                                 return;
                             }
                         } catch (e3) {}
@@ -177,52 +184,6 @@ function llenarCampoSeguro(form, nombres, valor) {
             }
         }
     }
-    console.warn(`⚠️ No se pudo encontrar o llenar el campo. Buscados:`, listaNombres);
-}
-
-function updatePrestamo() {
-    let monto = parseFloat(montoInput.value) || 0;
-    
-    if (monto > 10000) {
-        quincenasInput.min = 12;
-        quincenasInput.max = 24;
-        tipoPrestamoGlobal = 'LARGO PLAZO';
-        if (parseInt(quincenasInput.value) < 12) quincenasInput.value = 12;
-    } else {
-        quincenasInput.min = 1;
-        quincenasInput.max = 12;
-        tipoPrestamoGlobal = 'CORTO PLAZO';
-        if (parseInt(quincenasInput.value) > 12) quincenasInput.value = 12;
-    }
-
-    let quincenas = parseInt(quincenasInput.value) || 12;
-    quincenasLabel.textContent = quincenas;
-    tipoPrestamoDisplay.textContent = tipoPrestamoGlobal;
-
-    if (tipoPrestamoGlobal === 'CORTO PLAZO') {
-        tipoPrestamoDisplay.className = 'status-badge status-corto';
-    } else {
-        tipoPrestamoDisplay.className = 'status-badge status-largo';
-    }
-
-    if (monto > 20000) {
-        warning.textContent = '⚠️ El monto excede el máximo permitido ($20,000.00 M.N.).';
-        warning.style.display = 'block';
-    } else {
-        warning.style.display = 'none';
-    }
-
-    // --- CÁLCULOS FINANCIEROS (Interés simple del 1% quincenal) ---
-    let interesTotal = monto * 0.01 * quincenas;
-    let totalPagar = monto + interesTotal;
-    let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
-
-    // Mostrar en el panel visual
-    document.getElementById('pago_quincenal').textContent = '$' + pagoQuincenal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('interes_total').textContent = '$' + interesTotal.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-    document.getElementById('total_pagar').textContent = '$' + totalPagar.toLocaleString('es-MX', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-    cantidadLetra.value = NumeroALetras(monto);
 }
 
 // === GESTOR DE DESCARGAS Y LLENADO DINÁMICO DE PDF ===
@@ -275,7 +236,7 @@ async function procesarPDF(esBlanco = false) {
             llenarCampoSeguro(form, ['QUINCENAS'], document.getElementById('quincenas').value);
             llenarCampoSeguro(form, ['FECHA DE SOLICITUD', 'FECHA'], document.getElementById('fecha').value);
             
-            // Cantidad con letra (cubre múltiples nombres posibles en el PDF)
+            // Cantidad con letra
             llenarCampoSeguro(form, ['CANTIDAD CON LETRA', 'CANTIDAD_LETRA', 'LETRAS', 'MONTO LETRA'], document.getElementById('cantidad_letra').value);
 
             const nombreCompleto = `${document.getElementById('nombres').value} ${document.getElementById('ap_paterno').value} ${document.getElementById('ap_materno').value}`.trim();

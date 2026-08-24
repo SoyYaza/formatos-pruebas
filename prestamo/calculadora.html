@@ -69,7 +69,7 @@
             display: inline-block;
         }
 
-/* Estilos optimizados y profesionales para impresión en 1 sola hoja */
+        /* Estilos optimizados y profesionales para impresión en 1 sola hoja */
         @media print {
             @page {
                 size: portrait;
@@ -229,7 +229,6 @@
                 border-radius: 3px;
             }
         }
-
     </style>
 </head>
 <body>
@@ -276,7 +275,7 @@
                         <span id="res_capital" class="summary-value" style="color: var(--primary);">$0.00</span>
                     </div>
                     <div class="summary-item">
-                        <span class="summary-label">Interés Total (1% Quincenal)</span>
+                        <span class="summary-label">Interés Total (1% Mensual)</span>
                         <span id="res_interes" class="summary-value" style="color: #555;">$0.00</span>
                     </div>
                     <div class="summary-item">
@@ -301,7 +300,7 @@
                             <th>No. Quincena</th>
                             <th>Fecha de Descuento</th>
                             <th>Capital</th>
-                            <th>Interés (1%)</th>
+                            <th>Interés (Mensual)</th>
                             <th>Pago Quincenal</th>
                             <th>Saldo Restante</th>
                         </tr>
@@ -379,8 +378,9 @@
         // Actualizar etiqueta del slider
         document.getElementById('lbl_quincenas').textContent = quincenas;
 
-        // Cálculos financieros (Interés simple del 1% quincenal)
-        let interesTotal = monto * 0.01 * quincenas;
+        // --- CÁLCULOS FINANCIEROS (Interés simple del 1% mensual) ---
+        // 1% mensual sobre el saldo inicial, convertido a quincenas (quincenas / 2 meses)
+        let interesTotal = monto * 0.01 * (quincenas / 2);
         let totalPagar = monto + interesTotal;
         let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
         let capitalQuincenal = quincenas > 0 ? monto / quincenas : 0;
@@ -453,12 +453,14 @@
     // Ejecutar al cargar la página
     calcularTabla();
 </script>
+
 <!-- Barra inferior con el botón de impresión -->
-    <div style="margin-top: 30px; text-align: center; padding-bottom: 20px;">
-        <button type="button" class="btn" onclick="window.print()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(169, 52, 27, 0.2); transition: background-color 0.2s;">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"></path></svg>
-            Imprimir / Guardar Proyección (PDF)
-        </button>
-    </div>
+<div style="margin-top: 30px; text-align: center; padding-bottom: 20px;">
+    <button type="button" class="btn" onclick="window.print()" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 6px rgba(169, 52, 27, 0.2); transition: background-color 0.2s;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"></path></svg>
+        Imprimir / Guardar Proyección (PDF)
+    </button>
+</div>
+
 </body>
 </html>
