@@ -44,25 +44,30 @@
             left: 20px;
             width: 75px;
             height: auto;
-            z-index: 2;
+            z-index: 6;
             object-fit: contain;
         }
 
         .sheet {
             position: relative; padding: 25px; background: white;
             border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
         
-        /* MARCA DE AGUA DE FONDO */
-        .sheet::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: url('SUTCBEBCS.png') no-repeat center center; background-size: 45%;
-            opacity: 0.04; pointer-events: none; z-index: 0;
+        /* MARCA DE AGUA POR ENCIMA DE LOS DATOS */
+        .watermark-overlay {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('SUTCBEBCS.png') no-repeat center center;
+            background-size: 48%;
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: 5;
         }
 
         .header {
             text-align: center; border-bottom: 3px solid var(--primary);
-            padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 1;
+            padding-bottom: 15px; margin-bottom: 20px; position: relative; z-index: 6;
             padding-left: 70px; padding-right: 70px;
         }
         .header h1 { font-size: 20px; margin: 0 0 5px 0; }
@@ -73,17 +78,17 @@
         }
         .section-title-main {
             color: var(--primary); padding: 5px 15px 10px 15px; font-size: 18px;
-            text-align: center; font-weight: bold; position: relative; z-index: 1;
+            text-align: center; font-weight: bold; position: relative; z-index: 6;
         }
         .section {
             border: 1px solid var(--border); border-radius: 8px;
-            margin-bottom: 20px; overflow: hidden; position: relative; z-index: 1; background: white;
+            margin-bottom: 20px; overflow: hidden; position: relative; z-index: 6; background: rgba(255, 255, 255, 0.95);
         }
         .section-title {
             background: var(--primary); color: white; padding: 10px 15px;
             font-weight: 600; font-size: 14px; text-align: center;
         }
-        .section-body { padding: 20px; background: rgba(250, 249, 249, 0.85); }
+        .section-body { padding: 20px; background: rgba(250, 249, 249, 0.95); }
         .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 15px; }
         .field { display: flex; flex-direction: column; grid-column: span 12; }
         @media (min-width: 768px) {
@@ -110,8 +115,8 @@
         
         .worker-box {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; background: white; border: 1px solid #e2dad6;
-            border-radius: 8px; padding: 15px 20px; margin-bottom: 20px;
+            gap: 15px; background: rgba(255, 255, 255, 0.95); border: 1px solid #e2dad6;
+            border-radius: 8px; padding: 15px 20px; margin-bottom: 20px; position: relative; z-index: 6;
         }
         .worker-item { display: flex; flex-direction: column; }
         .worker-label { font-size: 11px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; }
@@ -119,17 +124,17 @@
         
         .summary-box {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px; background: linear-gradient(135deg, #fdfbf7 0%, #f4f0ef 100%);
+            gap: 15px; background: linear-gradient(135deg, rgba(253,251,247,0.95) 0%, rgba(244,240,239,0.95) 100%);
             border: 1px solid #e2dad6; border-radius: 8px; padding: 20px; margin-bottom: 0;
         }
         .summary-item { display: flex; flex-direction: column; }
         .summary-label { font-size: 11px; font-weight: 700; color: var(--primary-dark); text-transform: uppercase; }
         .summary-value { font-size: 16px; font-weight: bold; color: var(--text); margin-top: 4px; }
         
-        .amort-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 13px; background: white; }
+        .amort-table { width: 100%; border-collapse: collapse; margin-top: 5px; font-size: 13px; background: rgba(255,255,255,0.95); }
         .amort-table th, .amort-table td { border: 1px solid #e2dad6; padding: 10px 12px; text-align: center; }
         .amort-table th { background-color: var(--primary); color: white; font-weight: 600; }
-        .amort-table tr:nth-child(even) { background-color: #f9f6f5; }
+        .amort-table tr:nth-child(even) { background-color: rgba(249,246,245,0.95); }
         .amort-table tr.current-row { background-color: rgba(169,52,27,0.12) !important; border-left: 4px solid var(--primary); }
         .current-badge {
             background-color: var(--primary); color: white; font-size: 10px; font-weight: 700;
@@ -141,14 +146,14 @@
         .estado-pendiente { background: #fbe9e7; color: #a9341b; }
 
         /* =========================
-           FIRMA SECRETARÍA DE FINANZAS
+           FIRMA SECRETARÍA DE FINANZAS (Espacio ampliado)
            ========================= */
         .firma-finanzas {
             width: 320px;
-            margin: 35px auto 10px auto;
+            margin: 65px auto 20px auto; /* Margen superior ampliado para mayor separación */
             text-align: center;
             position: relative;
-            z-index: 1;
+            z-index: 6;
         }
         .firma-linea {
             width: 100%;
@@ -193,7 +198,12 @@
                 border: none !important; border-radius: 0 !important;
                 box-shadow: none !important; background: #fff !important;
             }
-            .sheet::before { opacity: 0.035 !important; background-size: 35% !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            .watermark-overlay {
+                opacity: 0.045 !important;
+                background-size: 40% !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             .logo-institucional { top: 6px !important; left: 8px !important; width: 45px !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             .header { margin: 0 0 6px 0 !important; padding: 0 50px 6px 50px !important; border-bottom: 2px solid var(--primary) !important; }
@@ -201,7 +211,7 @@
             .header h2 { font-size: 10px !important; line-height: 1 !important; margin: 0 !important; }
             .section-title-main { font-size: 11px !important; line-height: 1 !important; padding: 0 0 4px 0 !important; margin: 0 !important; }
             
-            .section { margin: 0 0 6px 0 !important; border: 1px solid #d8d0cc !important; border-radius: 4px !important; overflow: hidden !important; page-break-inside: avoid !important; }
+            .section { margin: 0 0 6px 0 !important; border: 1px solid #d8d0cc !important; border-radius: 4px !important; overflow: hidden !important; page-break-inside: avoid !important; background: #fff !important; }
             .section-title { padding: 3px 6px !important; margin: 0 !important; font-size: 8.5px !important; line-height: 1 !important; background: var(--primary) !important; color: #fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .section-body { padding: 5px !important; margin: 0 !important; background: #fff !important; }
             
@@ -223,7 +233,7 @@
             .summary-label { font-size: 7px !important; line-height: 1 !important; color: #666 !important; }
             .summary-value { font-size: 9px !important; line-height: 1 !important; margin-top: 2px !important; }
             
-            .amort-table { width: 100% !important; margin: 0 !important; border-collapse: collapse !important; font-size: 8px !important; }
+            .amort-table { width: 100% !important; margin: 0 !important; border-collapse: collapse !important; font-size: 8px !important; background: #fff !important; }
             .amort-table th { padding: 3px 4px !important; font-size: 8px !important; background: var(--primary) !important; color: #fff !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             .amort-table td { padding: 2.5px 4px !important; font-size: 8px !important; border: 1px solid #ddd5d0 !important; }
             
@@ -235,7 +245,7 @@
             
             .firma-finanzas {
                 width: 240px !important;
-                margin: 15px auto 5px auto !important;
+                margin: 35px auto 10px auto !important; /* Espacio ampliado y controlado para la impresión */
                 page-break-inside: avoid !important;
             }
             .firma-linea { border-top: 1px solid #333 !important; margin-bottom: 3px !important; }
@@ -247,6 +257,9 @@
 <body>
 <div class="app-container">
     <div class="sheet">
+        <!-- MARCA DE AGUA POR ENCIMA DE LOS CONTENIDOS -->
+        <div class="watermark-overlay"></div>
+
         <!-- LOGOTIPO INSTITUCIONAL -->
         <img src="SUTCBEBCS.png" class="logo-institucional" alt="Logo SUTCBEBCS">
 
@@ -255,7 +268,7 @@
             <h2>X COMITÉ EJECUTIVO ESTATAL</h2>
         </div>
         <div class="section-title-main">ESTADO DE CUENTA DE PRÉSTAMO</div>
-        <div style="text-align: center; margin-bottom: 20px; font-size: 13px; color: #666;">
+        <div style="text-align: center; margin-bottom: 20px; font-size: 13px; color: #666; position: relative; z-index: 6;">
             Proyección de saldo y descuentos quincenales del préstamo otorgado
         </div>
         <div class="section captura-section">
