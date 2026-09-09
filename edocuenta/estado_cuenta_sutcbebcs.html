@@ -146,11 +146,11 @@
         .estado-pendiente { background: #fbe9e7; color: #a9341b; }
 
         /* =========================
-           FIRMA SECRETARÍA DE FINANZAS (Espacio ampliado)
+           FIRMA SECRETARÍA DE FINANZAS
            ========================= */
         .firma-finanzas {
             width: 320px;
-            margin: 65px auto 20px auto; /* Margen superior ampliado para mayor separación */
+            margin: 65px auto 20px auto;
             text-align: center;
             position: relative;
             z-index: 6;
@@ -198,12 +198,20 @@
                 border: none !important; border-radius: 0 !important;
                 box-shadow: none !important; background: #fff !important;
             }
+            
+            /* FORZAR LA MARCA DE AGUA EN LA IMPRESIÓN */
             .watermark-overlay {
+                position: absolute !important;
+                top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+                background: url('SUTCBEBCS.png') no-repeat center center !important;
+                background-size: 42% !important;
                 opacity: 0.045 !important;
-                background-size: 40% !important;
+                pointer-events: none !important;
+                z-index: 5 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
             }
+
             .logo-institucional { top: 6px !important; left: 8px !important; width: 45px !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
             
             .header { margin: 0 0 6px 0 !important; padding: 0 50px 6px 50px !important; border-bottom: 2px solid var(--primary) !important; }
@@ -245,7 +253,7 @@
             
             .firma-finanzas {
                 width: 240px !important;
-                margin: 35px auto 10px auto !important; /* Espacio ampliado y controlado para la impresión */
+                margin: 35px auto 10px auto !important;
                 page-break-inside: avoid !important;
             }
             .firma-linea { border-top: 1px solid #333 !important; margin-bottom: 3px !important; }
