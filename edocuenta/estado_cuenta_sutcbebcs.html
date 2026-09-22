@@ -54,11 +54,11 @@
             overflow: hidden;
         }
         
-        /* MARCA DE AGUA POR ENCIMA DE LOS DATOS */
+        /* MARCA DE AGUA TRANSPARENTADA EN TODA LA HOJA */
         .watermark-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: url('SUTCBEBCS.png') no-repeat center center;
+            background: url('formatos-pruebas/edocuenta/SUTCBEBCS.png') no-repeat center center;
             background-size: 48%;
             opacity: 0.05;
             pointer-events: none;
@@ -150,7 +150,7 @@
            ========================= */
         .firma-finanzas {
             width: 320px;
-            margin: 65px auto 20px auto;
+            margin: 100px auto 30px auto;
             text-align: center;
             position: relative;
             z-index: 6;
@@ -203,7 +203,7 @@
             .watermark-overlay {
                 position: absolute !important;
                 top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
-                background: url('SUTCBEBCS.png') no-repeat center center !important;
+                background: url('formatos-pruebas/edocuenta/SUTCBEBCS.png') no-repeat center center !important;
                 background-size: 42% !important;
                 opacity: 0.045 !important;
                 pointer-events: none !important;
@@ -253,7 +253,7 @@
             
             .firma-finanzas {
                 width: 240px !important;
-                margin: 35px auto 10px auto !important;
+                margin: 55px auto 15px auto !important;
                 page-break-inside: avoid !important;
             }
             .firma-linea { border-top: 1px solid #333 !important; margin-bottom: 3px !important; }
@@ -265,11 +265,11 @@
 <body>
 <div class="app-container">
     <div class="sheet">
-        <!-- MARCA DE AGUA POR ENCIMA DE LOS CONTENIDOS -->
+        <!-- MARCA DE AGUA TRANSPARENTADA EN TODA LA HOJA -->
         <div class="watermark-overlay"></div>
 
         <!-- LOGOTIPO INSTITUCIONAL -->
-        <img src="SUTCBEBCS.png" class="logo-institucional" alt="Logo SUTCBEBCS">
+        <img src="formatos-pruebas/edocuenta/SUTCBEBCS.png" class="logo-institucional" alt="Logo SUTCBEBCS">
 
         <div class="header">
             <h1>Sindicato Único de Trabajadores del Colegio de Bachilleres<br>del Estado de Baja California Sur</h1>
@@ -279,6 +279,8 @@
         <div style="text-align: center; margin-bottom: 20px; font-size: 13px; color: #666; position: relative; z-index: 6;">
             Proyección de saldo y descuentos quincenales del préstamo otorgado
         </div>
+
+        <!-- 1. DATOS DEL TRABAJADOR -->
         <div class="section captura-section">
             <div class="section-title">1. DATOS DEL TRABAJADOR</div>
             <div class="section-body grid">
@@ -308,16 +310,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- 2. DATOS DEL PRÉSTAMO -->
         <div class="section captura-section">
             <div class="section-title">2. DATOS DEL PRÉSTAMO</div>
             <div class="section-body grid">
                 <div class="field col-span-4">
                     <label>MONTO SOLICITADO ($)</label>
-                    <input type="number" id="calc_monto" step="0.01" min="5000" max="20000" value="10000" oninput="calcularTabla()">
+                    <input type="number" id="calc_monto" step="0.01" min="1000" max="20000" value="20000" oninput="calcularTabla()">
                 </div>
                 <div class="field col-span-4">
-                    <label>PLAZO EN QUINCENAS (<span id="lbl_quincenas">12</span>)</label>
-                    <input type="range" id="calc_quincenas" min="2" max="24" value="12" step="1" oninput="calcularTabla()" style="width: 100%; margin-top: 10px; cursor: pointer;">
+                    <label>PLAZO EN QUINCENAS (<span id="lbl_quincenas">24</span>)</label>
+                    <input type="range" id="calc_quincenas" min="6" max="24" value="24" step="1" oninput="calcularTabla()" style="width: 100%; margin-top: 10px; cursor: pointer;">
                 </div>
                 <div class="field col-span-4">
                     <label>FECHA DEL PRIMER DESCUENTO</label>
@@ -325,6 +329,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- TARJETA INFORMATIVA DE LA FICHA -->
         <div class="worker-box">
             <div class="worker-item">
                 <span class="worker-label">Trabajador</span>
@@ -347,6 +353,8 @@
                 <span class="worker-value" id="ficha_emision">—</span>
             </div>
         </div>
+
+        <!-- 3. RESUMEN GLOBAL DEL PRÉSTAMO -->
         <div class="section">
             <div class="section-title">3. RESUMEN GLOBAL DEL PRÉSTAMO</div>
             <div class="section-body">
@@ -378,6 +386,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- 4. DETALLE DE DESCUENTOS QUINCENALES -->
         <div class="section">
             <div class="section-title">4. DETALLE DE DESCUENTOS QUINCENALES</div>
             <div class="section-body" style="overflow-x: auto;">
@@ -398,9 +408,7 @@
             </div>
         </div>
         
-        <!-- =========================
-             FIRMA SECRETARÍA DE FINANZAS
-             ========================= -->
+        <!-- FIRMA SECRETARÍA DE FINANZAS -->
         <div class="firma-finanzas">
             <div class="firma-linea"></div>
             <div class="firma-cargo">
@@ -413,6 +421,7 @@
         </div>
     </div>
 </div>
+
 <div class="bottom-bar" style="margin-top: 30px; text-align: center; padding-bottom: 20px;">
     <button type="button" class="btn" onclick="window.print()">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -421,6 +430,7 @@
         Generar Estado de Cuenta (PDF)
     </button>
 </div>
+
 <script>
     function obtenerQuincenaAnterior(fechaRef) {
         let y = fechaRef.getFullYear();
@@ -432,6 +442,7 @@
         let maxDate = new Date(Math.max.apply(null, candidatos));
         return maxDate.toISOString().split('T')[0];
     }
+    
     function obtenerSiguienteQuincena(fechaStr) {
         let partes = fechaStr.split('-');
         let y = parseInt(partes[0]);
@@ -445,11 +456,13 @@
         }
         return fechaNext.toISOString().split('T')[0];
     }
+    
     function formatearFecha(fechaStr) {
         if (!fechaStr) return '';
         let partes = fechaStr.split('-');
         return `${partes[2]}/${partes[1]}/${partes[0]}`;
     }
+
     let hoyRef = new Date();
     hoyRef.setHours(0, 0, 0, 0);
     document.getElementById('calc_fecha').value = obtenerQuincenaAnterior(hoyRef);
@@ -458,8 +471,9 @@
     function calcularTabla() {
         let montoInput = document.getElementById('calc_monto');
         let monto = parseFloat(montoInput.value) || 0;
-        if (monto < 5000) { monto = 5000; }
         if (monto > 20000) { monto = 20000; montoInput.value = 20000; }
+        if (monto < 1000) { monto = 1000; }
+
         let quincenasInput = document.getElementById('calc_quincenas');
         let quincenas = parseInt(quincenasInput.value) || 1;
         let fechaInicio = document.getElementById('calc_fecha').value;
@@ -468,6 +482,10 @@
         let interesTotal = monto * 0.01 * (quincenas / 2);
         let totalPagar = monto + interesTotal;
         let pagoQuincenal = quincenas > 0 ? totalPagar / quincenas : 0;
+        
+        // Distribución quincenal proporcional de capital e interés
+        let capitalQuincenal = quincenas > 0 ? monto / quincenas : 0;
+        let interesQuincenal = quincenas > 0 ? interesTotal / quincenas : 0;
 
         function moneda(valor) {
             return '$' + valor.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -505,33 +523,14 @@
         tbody.innerHTML = '';
 
         let saldoInsoluto = totalPagar;
-        let interesPendiente = interesTotal;
-        let capitalPendiente = monto;
         let pagadoAcumulado = 0;
 
         for (let i = 1; i <= quincenas; i++) {
-            let interesFila = 0;
-            let capitalFila = 0;
-
-            if (interesPendiente > 0) {
-                if (interesPendiente >= (pagoQuincenal - 0.01)) {
-                    interesFila = pagoQuincenal;
-                    interesPendiente -= pagoQuincenal;
-                } else {
-                    interesFila = interesPendiente;
-                    capitalFila = pagoQuincenal - interesPendiente;
-                    interesPendiente = 0;
-                    capitalPendiente -= capitalFila;
-                }
-            } else {
-                capitalFila = pagoQuincenal;
-                capitalPendiente -= capitalFila;
-            }
-
-            if (interesPendiente < 0.01) { interesPendiente = 0; }
-
             saldoInsoluto -= pagoQuincenal;
             if (saldoInsoluto < 0.01) { saldoInsoluto = 0; }
+
+            let capitalFila = capitalQuincenal;
+            let interesFila = interesQuincenal;
 
             let fechaFila = fechasArray[i - 1];
             let fechaFilaObj = fechaFila ? new Date(fechaFila + 'T00:00:00') : null;
